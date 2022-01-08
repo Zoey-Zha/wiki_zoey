@@ -2,6 +2,8 @@ package com.zoey.controller;
 
 import com.zoey.domain.Ebook;
 import com.zoey.reps.CommonResp;
+import com.zoey.reps.EbookResp;
+import com.zoey.req.EbookReq;
 import com.zoey.service.EbookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,10 +26,21 @@ public class EbookController {
         return ebookService.getList();
     }
 */
+    /*
     @RequestMapping("ebookList")
     public CommonResp getList() {
         CommonResp resp = new CommonResp();
         List<Ebook> list = ebookService.getList();
+        resp.setContent(list);
+        resp.setMessage("Get all the ebooks");
+        return resp;
+    }
+     */
+
+    @RequestMapping("ebookList")
+    public CommonResp getList(EbookReq ebookReq) {
+        CommonResp<List<EbookResp>> resp = new CommonResp<>();
+        List<EbookResp> list = ebookService.getList(ebookReq);
         resp.setContent(list);
         resp.setMessage("Get all the ebooks");
         return resp;
