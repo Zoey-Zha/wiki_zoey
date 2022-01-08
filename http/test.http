@@ -17,3 +17,6 @@ name=Zoey
 });
 %}
 ###
+
+GET http://localhost:8080/getDemo
+Accept: application/json
