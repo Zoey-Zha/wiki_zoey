@@ -16,8 +16,8 @@ public class HelloController {
     private TestService testService;
 
     @RequestMapping(value = "/hello",method = RequestMethod.POST)
-    public String hello() {
-        return "hello!";
+    public String hello(String name) {
+        return "hello!" + name;
     }
 
     @RequestMapping("test")
