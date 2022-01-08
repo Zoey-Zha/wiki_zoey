@@ -40,7 +40,8 @@
                              targetPackage="com.zoey.mapper"
                              type="XMLMAPPER"/>
 
-        <table tableName="demo" domainObjectName="Demo"/>
+        <!--<table tableName="demo" domainObjectName="Demo"/>-->
+        <table tableName="ebook"/>
         <!--<table tableName="ebook"/>-->
         <!--<table tableName="category"/>-->
         <!--<table tableName="doc"/>-->

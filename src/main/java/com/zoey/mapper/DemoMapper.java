@@ -2,11 +2,12 @@ package com.zoey.mapper;
 
 import com.zoey.domain.Demo;
 import com.zoey.domain.DemoExample;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-// @Mapper
+@Mapper
 public interface DemoMapper {
     long countByExample(DemoExample example);
 
