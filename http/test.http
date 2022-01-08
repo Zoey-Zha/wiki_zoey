@@ -20,3 +20,11 @@ name=Zoey
 
 GET http://localhost:8080/getDemo
 Accept: application/json
+
+###
+GET http://localhost:8080/ebook/ebookList
+Accept: application/json
+
+###
+GET http://localhost:8080/ebook/getEbook
+Accept: application/json
