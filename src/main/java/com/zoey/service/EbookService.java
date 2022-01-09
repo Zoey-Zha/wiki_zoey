@@ -5,11 +5,10 @@ import com.zoey.domain.EbookExample;
 import com.zoey.mapper.EbookMapper;
 import com.zoey.reps.EbookResp;
 import com.zoey.req.EbookReq;
-import org.springframework.beans.BeanUtils;
+import com.zoey.util.CopyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,14 +28,16 @@ public class EbookService {
         criteria.andNameLike("%" + ebookReq.getName() + "%");
         List<Ebook> ebookList = ebookMapper.selectByExample(example);
 
-        List<EbookResp> ebookResps = new ArrayList<>();
-        for (Ebook ebook : ebookList) {
-            EbookResp ebookResp = new EbookResp();
-            BeanUtils.copyProperties(ebook,ebookResp);
-//            ebookResp.setId(1234L);
-            ebookResps.add(ebookResp);
-        }
-        return ebookResps;
+
+        // List<EbookResp> ebookResps = new ArrayList<>();
+        List<EbookResp> list = CopyUtil.copyList(ebookList, EbookResp.class);
+//        for (Ebook ebook : ebookList) {
+//            EbookResp ebookResp = new EbookResp();
+//            BeanUtils.copyProperties(ebook,ebookResp);
+////            ebookResp.setId(1234L);
+//            ebookResps.add(ebookResp);
+//        }
+        return list;
     }
 
     public Ebook getEbookById(long id) {
