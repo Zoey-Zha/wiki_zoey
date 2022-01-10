@@ -1,28 +1,19 @@
 <template>
-  <a-layout>
-<!--    Msg 有什么作用呢-->
-<!--    <TheHeader msg="Welcome to Your Vue.js + TypeScript App"></TheHeader>-->
-    <TheHeader></TheHeader>
-    <router-view/>
-    <TheFooter></TheFooter>
-  </a-layout>
+  <a-layout-footer style="text-align: center">
+    Wiki Design ©2022 Created by Zoey ZHA
+  </a-layout-footer>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import TheHeader from '@/components/TheHeader.vue'; // @ is an alias to /src
-import TheFooter from '@/components/TheFooter.vue'; // @ is an alias to /src
 
 export default defineComponent({
-  name: 'App',
-  components: {
-    TheHeader,
-    TheFooter
+  name: 'TheFooter',
+  props: {
+    msg: String,
   },
 });
 </script>
-
-
 <style>
 #components-layout-demo-top-side-2 .logo {
   float: left;
