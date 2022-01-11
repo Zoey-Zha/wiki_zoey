@@ -8,6 +8,7 @@ import com.zoey.req.EbookReq;
 import com.zoey.util.CopyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -25,7 +26,10 @@ public class EbookService {
     public List<EbookResp> getList(EbookReq ebookReq) {
         EbookExample example = new EbookExample();
         EbookExample.Criteria criteria = example.createCriteria();
-        criteria.andNameLike("%" + ebookReq.getName() + "%");
+        // 增加动态SQL
+        if (!ObjectUtils.isEmpty(ebookReq.getName())) {
+            criteria.andNameLike("%" + ebookReq.getName() + "%");
+        }
         List<Ebook> ebookList = ebookMapper.selectByExample(example);
 
 
