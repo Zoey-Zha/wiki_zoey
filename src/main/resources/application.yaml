@@ -4,7 +4,10 @@ spring:
     username: wikidev
     password: 1qaz!QAZ
     driver-class-name: com.mysql.cj.jdbc.Driver
-
 # 配置Mybatis
 mybatis:
   mapper-locations: classpath:/mapper/**/*.xml
+
+# 配置后端端口号，怀疑跟前端的8080冲突
+server:
+  port: 8090
