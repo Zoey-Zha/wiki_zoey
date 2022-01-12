@@ -8,6 +8,6 @@ public class TestController {
 
     @RequestMapping("branch")
     public String testBranch() {
-        return "this is from hot_fix branch";
+        return "this is from hot_fix branch， I want to go original";
     }
 }

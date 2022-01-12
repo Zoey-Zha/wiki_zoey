@@ -7,3 +7,5 @@ import 'ant-design-vue/dist/antd.css';
 
 
 createApp(App).use(store).use(router).use(Antd).mount('#app');
+console.log("env: " + process.env.NODE_ENV);
+console.log("VUE_APP_SERVER_URL: " + process.env.VUE_APP_SERVER_URL);
