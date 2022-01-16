@@ -3,13 +3,12 @@ package com.zoey.controller;
 import com.zoey.domain.Ebook;
 import com.zoey.reps.CommonResp;
 import com.zoey.reps.EbookResp;
+import com.zoey.reps.PageResp;
 import com.zoey.req.EbookReq;
 import com.zoey.service.EbookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 // @RestController("/ebook") You should put it in RequestMapping
 // @RequestMapping("/ebook") // It is also OK
@@ -39,8 +38,9 @@ public class EbookController {
 
     @RequestMapping("ebookList")
     public CommonResp getList(EbookReq ebookReq) {
-        CommonResp<List<EbookResp>> resp = new CommonResp<>();
-        List<EbookResp> list = ebookService.getList(ebookReq);
+        CommonResp<PageResp<EbookResp>> resp = new CommonResp<>();
+        //List<EbookResp> list = ebookService.getList(ebookReq);
+        PageResp<EbookResp> list = ebookService.getList(ebookReq);
         resp.setContent(list);
         resp.setMessage("Get all the ebooks");
         return resp;

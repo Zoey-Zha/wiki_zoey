@@ -6,6 +6,7 @@ import com.zoey.domain.Ebook;
 import com.zoey.domain.EbookExample;
 import com.zoey.mapper.EbookMapper;
 import com.zoey.reps.EbookResp;
+import com.zoey.reps.PageResp;
 import com.zoey.req.EbookReq;
 import com.zoey.util.CopyUtil;
 import org.slf4j.Logger;
@@ -30,9 +31,7 @@ public class EbookService {
 //        //return ebookMapper.selectByPrimaryKey();
 //    }
 
-    public List<EbookResp> getList(EbookReq ebookReq) {
-
-
+    public PageResp<EbookResp> getList(EbookReq ebookReq) {
 
         EbookExample example = new EbookExample();
         EbookExample.Criteria criteria = example.createCriteria();
@@ -42,7 +41,7 @@ public class EbookService {
         }
 
         // 后端分页，写在要分页的查询前面，因为它只对一个sql查询生效
-        PageHelper.startPage(2,3);
+        PageHelper.startPage(ebookReq.getPage(),ebookReq.getSize());
         List<Ebook> ebookList = ebookMapper.selectByExample(example);
 
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
@@ -58,7 +57,14 @@ public class EbookService {
 ////            ebookResp.setId(1234L);
 //            ebookResps.add(ebookResp);
 //        }
-        return list;
+//        EbookResp ebookResp = new EbookResp();
+//        Page page = new Page(pageInfo.getTotal(),pageInfo.getPageNum());
+//        ebookResp.setPageInfo(page);
+        PageResp<EbookResp> pageResp = new PageResp<>();
+        pageResp.setList(list);
+        pageResp.setTotalNum(pageInfo.getTotal());
+
+        return pageResp;
     }
 
     public Ebook getEbookById(long id) {
