@@ -11,3 +11,8 @@ mybatis:
 # 配置后端端口号，怀疑跟前端的8080冲突
 server:
   port: 8090
+
+# 增加数据库查询结果日志打印，打印所有sql日志，参数，结果
+logging.level.com.zoey.mapper:
+  trace
+

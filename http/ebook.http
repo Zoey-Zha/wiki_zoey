@@ -1,2 +1,2 @@
-GET http://localhost:8090/ebook/ebookList?name=Spring
+GET http://localhost:8090/ebook/ebookList
 Accept: application/json
