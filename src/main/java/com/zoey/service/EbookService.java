@@ -5,9 +5,10 @@ import com.github.pagehelper.PageInfo;
 import com.zoey.domain.Ebook;
 import com.zoey.domain.EbookExample;
 import com.zoey.mapper.EbookMapper;
-import com.zoey.reps.EbookResp;
+import com.zoey.reps.EbookQueryResp;
 import com.zoey.reps.PageResp;
-import com.zoey.req.EbookReq;
+import com.zoey.req.EbookQueryReq;
+import com.zoey.req.EbookSaveReq;
 import com.zoey.util.CopyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,17 +32,17 @@ public class EbookService {
 //        //return ebookMapper.selectByPrimaryKey();
 //    }
 
-    public PageResp<EbookResp> getList(EbookReq ebookReq) {
+    public PageResp<EbookQueryResp> getList(EbookQueryReq ebookQueryReq) {
 
         EbookExample example = new EbookExample();
         EbookExample.Criteria criteria = example.createCriteria();
         // 增加动态SQL
-        if (!ObjectUtils.isEmpty(ebookReq.getName())) {
-            criteria.andNameLike("%" + ebookReq.getName() + "%");
+        if (!ObjectUtils.isEmpty(ebookQueryReq.getName())) {
+            criteria.andNameLike("%" + ebookQueryReq.getName() + "%");
         }
 
         // 后端分页，写在要分页的查询前面，因为它只对一个sql查询生效
-        PageHelper.startPage(ebookReq.getPage(),ebookReq.getSize());
+        PageHelper.startPage(ebookQueryReq.getPage(), ebookQueryReq.getSize());
         List<Ebook> ebookList = ebookMapper.selectByExample(example);
 
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
@@ -50,7 +51,7 @@ public class EbookService {
         logger.info("Page num: {}", pageInfo.getPageNum());
 
         // List<EbookResp> ebookResps = new ArrayList<>();
-        List<EbookResp> list = CopyUtil.copyList(ebookList, EbookResp.class);
+        List<EbookQueryResp> list = CopyUtil.copyList(ebookList, EbookQueryResp.class);
 //        for (Ebook ebook : ebookList) {
 //            EbookResp ebookResp = new EbookResp();
 //            BeanUtils.copyProperties(ebook,ebookResp);
@@ -60,11 +61,29 @@ public class EbookService {
 //        EbookResp ebookResp = new EbookResp();
 //        Page page = new Page(pageInfo.getTotal(),pageInfo.getPageNum());
 //        ebookResp.setPageInfo(page);
-        PageResp<EbookResp> pageResp = new PageResp<>();
+        PageResp<EbookQueryResp> pageResp = new PageResp<>();
         pageResp.setList(list);
         pageResp.setTotalNum(pageInfo.getTotal());
 
         return pageResp;
+    }
+
+    public void save(EbookSaveReq req){
+        // 如何把EbookSaveReq转换成Ebook, 我一下子没有到这种方法，只想到必须转换
+        Ebook ebook = CopyUtil.copy(req,Ebook.class);
+        System.out.println(ebook.toString());
+
+        // 复用save实现新增新增
+        if (ObjectUtils.isEmpty(req.getId())){
+            // insert
+            // ebookMapper.insert(ebook);
+            ebookMapper.insert(ebook);
+
+        } else {
+            // update
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
+
     }
 
     public Ebook getEbookById(long id) {

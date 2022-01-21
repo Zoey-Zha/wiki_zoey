@@ -2,13 +2,13 @@ package com.zoey.controller;
 
 import com.zoey.domain.Ebook;
 import com.zoey.reps.CommonResp;
-import com.zoey.reps.EbookResp;
+import com.zoey.reps.EbookQueryResp;
 import com.zoey.reps.PageResp;
-import com.zoey.req.EbookReq;
+import com.zoey.req.EbookQueryReq;
+import com.zoey.req.EbookSaveReq;
 import com.zoey.service.EbookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 // @RestController("/ebook") You should put it in RequestMapping
 // @RequestMapping("/ebook") // It is also OK
@@ -36,13 +36,22 @@ public class EbookController {
     }
      */
 
-    @RequestMapping("ebookList")
-    public CommonResp getList(EbookReq ebookReq) {
-        CommonResp<PageResp<EbookResp>> resp = new CommonResp<>();
+    @GetMapping("ebookList")
+    public CommonResp getList(EbookQueryReq ebookQueryReq) {
+        CommonResp<PageResp<EbookQueryResp>> resp = new CommonResp<>();
         //List<EbookResp> list = ebookService.getList(ebookReq);
-        PageResp<EbookResp> list = ebookService.getList(ebookReq);
+        PageResp<EbookQueryResp> list = ebookService.getList(ebookQueryReq);
         resp.setContent(list);
         resp.setMessage("Get all the ebooks");
+        return resp;
+    }
+
+    @PostMapping("save")
+    public CommonResp save(@RequestBody EbookSaveReq req) {
+        CommonResp resp = new CommonResp();
+        //List<EbookResp> list = ebookService.getList(ebookReq);
+        ebookService.save(req);
+        resp.setMessage("Save the ebooks");
         return resp;
     }
 

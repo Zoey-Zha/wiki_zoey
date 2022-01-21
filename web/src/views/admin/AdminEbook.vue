@@ -146,11 +146,22 @@
       const handleModalOk = () => {
         modalLoading.value = true;
         // ebook.value.category1Id = categoryIds.value[0];
-        // ebook.value.category2Id = categoryIds.value[1];
-        setTimeout(() => {
-          modalVisible.value = false;
-          modalLoading.value = false;
-        },2000);
+        // ebook.value.category2Id = categoryIds.value[1]
+
+        axios.post("/ebook/save",ebook.value).then((response) => {
+          const data = response.data;
+
+          if (data.success) {
+            modalVisible.value = false;
+            modalLoading.value = false;
+          }
+          // reload ebook list
+          handleQuery({
+            page: 1,
+            size: pagination.value.pageSize
+          });
+
+        })
       };
 
       /**
