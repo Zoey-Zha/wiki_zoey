@@ -24,10 +24,17 @@
             <a-button type="primary" @click="edit(record)">
               Edit
             </a-button>
-
-            <a-button type="danger" @click="handleDel(record.id)">
+            <a-popconfirm
+                title="Are you sure delete this Ebook?"
+                ok-text="Yes"
+                cancel-text="No"
+                @confirm="confirm(record.id)"
+                @cancel="cancel"
+            >
+            <a-button type="danger">
               Remove
             </a-button>
+            </a-popconfirm>
           </a-space>
         </template>
       </a-table>
@@ -215,6 +222,21 @@
         })
       };
 
+      const confirm = (id: number) =>{
+        handleDel(id);
+        handleQuery({
+          page: pagination.value.current,
+          size: pagination.value.pageSize
+        });
+      };
+
+      const cancel = (id: number) =>{
+        handleQuery({
+          page: pagination.value.current,
+          size: pagination.value.pageSize
+        });
+      };
+
       onMounted(() => {
         handleQuery({
           page: 1,
@@ -231,12 +253,15 @@
 
         edit,
         add,
+        handleDel,
 
         ebook,
         modalLoading,
         modalVisible,
         handleModalOk,
-        handleDel
+        confirm,
+        cancel,
+
       }
     }
   });
