@@ -3,6 +3,7 @@ package com.zoey.util;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
  * Twitter的分布式自增ID雪花算法
@@ -18,9 +19,9 @@ public class SnowFlake {
     /**
      * 每一部分占用的位数
      */
-    private final static long SEQUENCE_BIT = 12; //序列号占用的位数
-    private final static long MACHINE_BIT = 5;   //机器标识占用的位数
-    private final static long DATACENTER_BIT = 5;//数据中心占用的位数
+    private final static long SEQUENCE_BIT = 10; //序列号占用的位数
+    private final static long MACHINE_BIT = 4;   //机器标识占用的位数
+    private final static long DATACENTER_BIT = 4;//数据中心占用的位数
 
     /**
      * 每一部分的最大值
@@ -99,13 +100,13 @@ public class SnowFlake {
     }
 
     public static void main(String[] args) throws ParseException {
-        // 时间戳
-        // System.out.println(System.currentTimeMillis());
-        // System.out.println(new Date().getTime());
-        //
-        // String dateTime = "2021-01-01 08:00:00";
-        // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        // System.out.println(sdf.parse(dateTime).getTime());
+         // 时间戳
+//         System.out.println("Sysytem.currentTimeMills" + System.currentTimeMillis());
+//         System.out.println("new date: " + new Date().getTime());
+//
+         String dateTime = "2021-01-01 08:00:00";
+         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+         System.out.println(sdf.parse(dateTime).getTime());
 
         SnowFlake snowFlake = new SnowFlake(1, 1);
 

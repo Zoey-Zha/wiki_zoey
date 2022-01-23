@@ -55,6 +55,15 @@ public class EbookController {
         return resp;
     }
 
+    @DeleteMapping("delete/{id}")
+    public CommonResp delete(@PathVariable long id) {
+        CommonResp resp = new CommonResp();
+        //List<EbookResp> list = ebookService.getList(ebookReq);
+        ebookService.delete(id);
+        resp.setMessage("delete the ebooks");
+        return resp;
+    }
+
     @RequestMapping("getEbook")
     public Ebook getEbook(){
         return ebookService.getEbookById(1);

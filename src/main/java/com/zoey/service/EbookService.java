@@ -10,6 +10,7 @@ import com.zoey.reps.PageResp;
 import com.zoey.req.EbookQueryReq;
 import com.zoey.req.EbookSaveReq;
 import com.zoey.util.CopyUtil;
+import com.zoey.util.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class EbookService {
 
     @Autowired
     private EbookMapper ebookMapper;
+
+    @Autowired
+    private SnowFlake snowFlake;
 
 //    public List<Ebook> getList() {
 //        return ebookMapper.selectByExample(null);
@@ -49,6 +53,7 @@ public class EbookService {
         logger.info("Total rows: {}", pageInfo.getTotal());
         logger.info("Total pages: {}", pageInfo.getPages());
         logger.info("Page num: {}", pageInfo.getPageNum());
+        logger.info("The whole list" + ebookList);
 
         // List<EbookResp> ebookResps = new ArrayList<>();
         List<EbookQueryResp> list = CopyUtil.copyList(ebookList, EbookQueryResp.class);
@@ -76,7 +81,8 @@ public class EbookService {
         // 复用save实现新增新增
         if (ObjectUtils.isEmpty(req.getId())){
             // insert
-            // ebookMapper.insert(ebook);
+            //  = new SnowFlake(1, 1);
+            ebook.setId(snowFlake.nextId());
             ebookMapper.insert(ebook);
 
         } else {
@@ -84,6 +90,10 @@ public class EbookService {
             ebookMapper.updateByPrimaryKey(ebook);
         }
 
+    }
+
+    public void delete(long id){
+        ebookMapper.deleteByPrimaryKey(id);
     }
 
     public Ebook getEbookById(long id) {

@@ -3,6 +3,11 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
+      <p>
+        <a-button type="primary" @click="add" size = "large">
+          New
+        </a-button>
+      </p>
       <a-table
           :columns="columns"
           :row-key="record => record.id"
@@ -19,7 +24,8 @@
             <a-button type="primary" @click="edit(record)">
               Edit
             </a-button>
-            <a-button type="danger">
+
+            <a-button type="danger" @click="handleDel(record.id)">
               Remove
             </a-button>
           </a-space>
@@ -27,6 +33,8 @@
       </a-table>
     </a-layout-content>
   </a-layout>
+
+  <!-- 编辑框或新加内容框 -->
   <a-modal
     title="电子书表单"
     v-model:visible="modalVisible"
@@ -40,18 +48,23 @@
       <a-form-item label="名称">
         <a-input v-model:value="ebook.name" />
       </a-form-item>
-      <a-form-item label="分类">
-        <a-cascader
-            v-model:value="categoryIds"
-            :field-names="{ label: 'name', value: 'id', children: 'children' }"
-            :options="level1"
-        />
+      <a-form-item label="分类1">
+        <a-input v-model:value="ebook.category1Id" />
+<!--        <a-cascader-->
+<!--            v-model:value="categoryIds"-->
+<!--            :field-names="{ label: 'name', value: 'id', children: 'children' }"-->
+<!--            :options="level1"-->
+<!--        />-->
+      </a-form-item>
+      <a-form-item label="分类2">
+        <a-input v-model:value="ebook.category2Id" type="textarea" />
       </a-form-item>
       <a-form-item label="描述">
         <a-input v-model:value="ebook.description" type="textarea" />
       </a-form-item>
     </a-form>
   </a-modal>
+
 </template>
 <script lang = "ts">
   import {defineComponent, onMounted,ref} from 'vue';
@@ -89,7 +102,7 @@
           dataIndex: 'category2Id',
         },
         {
-          title: 'ReadNum',
+          title: 'ViewNum',
           dataIndex: 'viewCount',
         },
         {
@@ -117,6 +130,8 @@
           loading.value = false;
           const data = response.data;
           ebooks.value = data.content.list;
+          console.log('测试ebook');
+          console.log(ebooks);
 
           // 重置分页按钮
           pagination.value.current = p.page;  // 注释掉后发现，翻页失效
@@ -157,7 +172,7 @@
           }
           // reload ebook list
           handleQuery({
-            page: 1,
+            page: pagination.value.current,
             size: pagination.value.pageSize
           });
 
@@ -174,6 +189,31 @@
         //categoryIds.value = [ebook.value.category1Id, ebook.value.category2Id]
       };
 
+      /**
+       * 新增
+       */
+      const add = () => {
+        modalVisible.value = true;
+        ebook.value={};
+      };
+
+
+      /**
+       * 删除
+       */
+      const handleDel = (id: number) => {
+        axios.delete("/ebook/delete/"+id).then((response) => {
+          const data = response.data;
+
+          //if (data.success) {
+          //};
+          // reload ebook list
+          handleQuery({
+            page: pagination.value.current,
+            size: pagination.value.pageSize
+          });
+        })
+      };
 
       onMounted(() => {
         handleQuery({
@@ -190,11 +230,13 @@
         handleTableChange,
 
         edit,
+        add,
 
         ebook,
         modalLoading,
         modalVisible,
-        handleModalOk
+        handleModalOk,
+        handleDel
       }
     }
   });
