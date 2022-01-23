@@ -1,8 +1,11 @@
 package com.zoey.req;
 
+import javax.validation.constraints.NotNull;
+
 public class EbookSaveReq {
     private Long id;
 
+    @NotNull(message = "Name can not be empty")
     private String name;
 
     private Long category1Id;
