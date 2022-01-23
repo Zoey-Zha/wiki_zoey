@@ -1,9 +1,14 @@
 package com.zoey.req;
 
-public class PageReq {
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
 
+public class PageReq {
+    @NotNull(message = "page can not be empty!")
     private int page;
 
+    @NotNull(message = "size can not be empty!")
+    @Max(value = 1000, message = "size can not be over 1000")
     private int size;
 
     public PageReq() {

@@ -8,6 +8,7 @@ import com.zoey.req.EbookQueryReq;
 import com.zoey.req.EbookSaveReq;
 import com.zoey.service.EbookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 // @RestController("/ebook") You should put it in RequestMapping
@@ -37,7 +38,7 @@ public class EbookController {
      */
 
     @GetMapping("ebookList")
-    public CommonResp getList(EbookQueryReq ebookQueryReq) {
+    public CommonResp getList(@Validated EbookQueryReq ebookQueryReq) {
         CommonResp<PageResp<EbookQueryResp>> resp = new CommonResp<>();
         //List<EbookResp> list = ebookService.getList(ebookReq);
         PageResp<EbookQueryResp> list = ebookService.getList(ebookQueryReq);
