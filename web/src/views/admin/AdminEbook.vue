@@ -3,11 +3,32 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
+<!--      <a-input-search-->
+<!--          v-model:value="search_value"-->
+<!--          placeholder="input name"-->
+<!--          enter-button="Search"-->
+<!--          style="width:200px"-->
+<!--          @search="onSearch"-->
+<!--      />-->
       <p>
-        <a-button type="primary" @click="add" size = "large">
-          New
-        </a-button>
+        <a-form layout="inline" :model="param">
+          <a-form-item>
+            <a-input v-model:value="param.name" placeholder="Name">
+            </a-input>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="handleQuery({page: 1,size: pagination.pageSize})">
+              Search
+            </a-button>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="add" size="medium">
+              New
+            </a-button>
+          </a-form-item>
+        </a-form>
       </p>
+
       <a-table
           :columns="columns"
           :row-key="record => record.id"
@@ -77,11 +98,17 @@
   import {defineComponent, onMounted,ref} from 'vue';
   import axios from "axios";
   import {message} from "ant-design-vue";
+  import {Tool} from "@/util/tool";
 
   export default defineComponent({
     name: 'AdminEbook',
-    setup() {
+    setup: function () {
+      const param = ref();
+      param.value = {}
       const ebooks = ref();
+      const search_value = ref();
+      // search_value.value = {}; // 需要加Value才能赋值
+      //响应式变量，不用使用.value调用？还是不太懂响应式变量
       const pagination = ref({
         current: 1,
         pageSize: 10,
@@ -93,7 +120,7 @@
         {
           title: 'Cover',
           dataIndex: 'cover',  // 数据源吧，把查出结果的列名匹配上
-          slots: { customRender: 'cover'}
+          slots: {customRender: 'cover'}
         },
         {
           title: 'Name',
@@ -120,7 +147,7 @@
         {
           title: 'Action',
           dataIndex: 'action',
-          slots: { customRender: 'action' }
+          slots: {customRender: 'action'}
         }
       ];
 
@@ -129,15 +156,17 @@
        */
       const handleQuery = (p: any) => {
         loading.value = true;
-        axios.get("/ebook/ebookList",{
+        axios.get("/ebook/ebookList", {
           params: {
             page: p.page,
-            size: p.size
+            size: p.size,
+            // name: search_value.value,    // this is from Xinxin
+            name: param.value.name
           }
         }).then((response) => {
           loading.value = false;
           const data = response.data;
-          if(data.success) {
+          if (data.success) {
             ebooks.value = data.content.list;
             // 重置分页按钮
             pagination.value.current = p.page;  // 注释掉后发现，翻页失效
@@ -163,7 +192,7 @@
       /**
        * 数组，[100, 101]对应：前端开发 / Vue
        */
-      // const categoryIds = ref();
+          // const categoryIds = ref();
       const ebook = ref();
       const modalVisible = ref(false);
       const modalLoading = ref(false);
@@ -172,7 +201,7 @@
         // ebook.value.category1Id = categoryIds.value[0];
         // ebook.value.category2Id = categoryIds.value[1]
 
-        axios.post("/ebook/save",ebook.value).then((response) => {
+        axios.post("/ebook/save", ebook.value).then((response) => {
           modalLoading.value = false; // 只要又返回，就停止loading
           const data = response.data;
 
@@ -197,7 +226,7 @@
        */
       const edit = (record: any) => {
         modalVisible.value = true;
-        ebook.value=record
+        ebook.value = Tool.copy(record)
         //ebook.value = Tool.copy(record);
         //categoryIds.value = [ebook.value.category1Id, ebook.value.category2Id]
       };
@@ -207,7 +236,7 @@
        */
       const add = () => {
         modalVisible.value = true;
-        ebook.value={};
+        ebook.value = {};
       };
 
 
@@ -215,9 +244,8 @@
        * 删除
        */
       const handleDel = (id: number) => {
-        axios.delete("/ebook/delete/"+id).then((response) => {
-          const data = response.data;
-
+        axios.delete("/ebook/delete/" + id).then((response) => {
+          const data = response.data
           //if (data.success) {
           //};
           // reload ebook list
@@ -228,7 +256,7 @@
         })
       };
 
-      const confirm = (id: number) =>{
+      const confirm = (id: number) => {
         handleDel(id);
         handleQuery({
           page: pagination.value.current,
@@ -236,12 +264,19 @@
         });
       };
 
-      const cancel = (id: number) =>{
+      const cancel = (id: number) => {
         handleQuery({
           page: pagination.value.current,
           size: pagination.value.pageSize
         });
       };
+
+      const onSearch = (search_value: any) => {
+        handleQuery({
+          page: 1,
+          size: pagination.value.pageSize
+        });
+      }
 
       onMounted(() => {
         handleQuery({
@@ -251,10 +286,12 @@
       });
 
       return {
+        param,
         ebooks,
         pagination,
         columns,
         loading,
+        search_value,
         handleTableChange,
 
         edit,
@@ -267,6 +304,8 @@
         handleModalOk,
         confirm,
         cancel,
+        onSearch,
+        handleQuery,
 
       }
     }

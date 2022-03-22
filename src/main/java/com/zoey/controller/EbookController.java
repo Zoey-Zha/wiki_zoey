@@ -38,7 +38,7 @@ public class EbookController {
      */
 
     @GetMapping("ebookList")
-    public CommonResp getList(@Validated EbookQueryReq ebookQueryReq) {
+    public CommonResp getList(@Validated EbookQueryReq ebookQueryReq) { // 加上@Validated 开启校验参数
         CommonResp<PageResp<EbookQueryResp>> resp = new CommonResp<>();
         //List<EbookResp> list = ebookService.getList(ebookReq);
         PageResp<EbookQueryResp> list = ebookService.getList(ebookQueryReq);
