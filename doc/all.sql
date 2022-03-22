@@ -47,3 +47,10 @@ INSERT INTO ebook (id, name, category1_id, category2_id, description, cover, doc
 INSERT INTO ebook (id, name, category1_id, category2_id, description, cover, doc_count, view_count, vote_count) VALUES (5, 'Oracle 入门教程', 5, 5, '零基础入门 Oracle 开发，企业级应用开发最佳首选框架', '/image/oracle.png', 65, 543, 321);
 
 SELECT * from ebook;
+
+create table if not exits `test` (
+                        `id` bigint not null comment 'id',
+                        `name` varchar(50) comment '名称',
+                        `password` varchar(50) comment '密码',
+                        primary key (`id`)
+) engine=innodb default charset=utf8mb4 comment='测试';
