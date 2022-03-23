@@ -1,8 +1,8 @@
 package com.zoey.controller;
 
 import com.zoey.domain.Category;
-import com.zoey.reps.CommonResp;
 import com.zoey.reps.CategoryQueryResp;
+import com.zoey.reps.CommonResp;
 import com.zoey.reps.PageResp;
 import com.zoey.req.CategoryQueryReq;
 import com.zoey.req.CategorySaveReq;
@@ -10,6 +10,8 @@ import com.zoey.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 // @RestController("/category") You should put it in RequestMapping
 // @RequestMapping("/category") // It is also OK
@@ -42,6 +44,16 @@ public class CategoryController {
         CommonResp<PageResp<CategoryQueryResp>> resp = new CommonResp<>();
         //List<CategoryResp> list = categoryService.getList(categoryReq);
         PageResp<CategoryQueryResp> list = categoryService.getList(categoryQueryReq);
+        resp.setContent(list);
+        resp.setMessage("Get all the categorys");
+        return resp;
+    }
+
+    @GetMapping("all")
+    public CommonResp all() { // 加上@Validated 开启校验参数
+        CommonResp<List<CategoryQueryResp>> resp = new CommonResp<>();
+        //List<CategoryResp> list = categoryService.getList(categoryReq);
+        List<CategoryQueryResp> list = categoryService.all();
         resp.setContent(list);
         resp.setMessage("Get all the categorys");
         return resp;

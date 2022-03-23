@@ -13,11 +13,7 @@
       <p>
         <a-form layout="inline" :model="param">
           <a-form-item>
-            <a-input v-model:value="param.name" placeholder="Name">
-            </a-input>
-          </a-form-item>
-          <a-form-item>
-            <a-button type="primary" @click="handleQuery({page: 1,size: pagination.pageSize})">
+            <a-button type="primary" @click="handleQuery()">
               Search
             </a-button>
           </a-form-item>
@@ -33,9 +29,8 @@
           :columns="columns"
           :row-key="record => record.id"
           :data-source="categorys"
-          :pagination="pagination"
           :loading="loading"
-          @change="handleTableChange"
+          :pagination="false"
       >
         <template #cover="{ text: cover}">
           <img v-if="cover" :src="cover"  :alt = "avatar"/>
@@ -98,11 +93,11 @@
       const search_value = ref();
       // search_value.value = {}; // 需要加Value才能赋值
       //响应式变量，不用使用.value调用？还是不太懂响应式变量
-      const pagination = ref({
-        current: 1,
-        pageSize: 10,
-        total: 0
-      });
+      // const pagination = ref({
+      //   current: 1,
+      //   pageSize: 10,
+      //   total: 0
+      // });
 
       const loading = ref(false);
       const columns = [
@@ -129,39 +124,20 @@
       /**
        *  数据查询
        */
-      const handleQuery = (p: any) => {
+      const handleQuery = () => {
         loading.value = true;
-        axios.get("/category/categoryList", {
-          params: {
-            page: p.page,
-            size: p.size,
-            // name: search_value.value,    // this is from Xinxin
-            name: param.value.name
-          }
-        }).then((response) => {
+        axios.get("/category/all").then((response) => {
           loading.value = false;
           const data = response.data;
           if (data.success) {
-            categorys.value = data.content.list;
+            categorys.value = data.content;
             // 重置分页按钮
-            pagination.value.current = p.page;  // 注释掉后发现，翻页失效
-            pagination.value.total = data.content.totalNum;
           } else {
             message.error(data.message);
           }
         })
       };
 
-      /**
-       * 表格点击页码时触发
-       */
-      const handleTableChange = (pagination: any) => {
-        console.log("Look, 自带的分页参数" + pagination);
-        handleQuery({
-          page: pagination.current,
-          size: pagination.pageSize
-        });
-      };
 
       // -------- 表单 ---------
       /**
@@ -183,10 +159,7 @@
           if (data.success) {
             modalVisible.value = false;
             // modalLoading.value = false;
-            handleQuery({
-              page: pagination.value.current,
-              size: pagination.value.pageSize
-            });
+            handleQuery();
           } else {
             message.error(data.message);
           }
@@ -224,50 +197,33 @@
           //if (data.success) {
           //};
           // reload category list
-          handleQuery({
-            page: pagination.value.current,
-            size: pagination.value.pageSize
-          });
+          handleQuery();
         })
       };
 
       const confirm = (id: number) => {
         handleDel(id);
-        handleQuery({
-          page: pagination.value.current,
-          size: pagination.value.pageSize
-        });
+        handleQuery();
       };
 
       const cancel = (id: number) => {
-        handleQuery({
-          page: pagination.value.current,
-          size: pagination.value.pageSize
-        });
+        handleQuery();
       };
 
       const onSearch = (search_value: any) => {
-        handleQuery({
-          page: 1,
-          size: pagination.value.pageSize
-        });
+        handleQuery();
       }
 
       onMounted(() => {
-        handleQuery({
-          page: 1,
-          size: pagination.value.pageSize
-        });
+        handleQuery();
       });
 
       return {
         param,
         categorys,
-        pagination,
         columns,
         loading,
         search_value,
-        handleTableChange,
 
         edit,
         add,

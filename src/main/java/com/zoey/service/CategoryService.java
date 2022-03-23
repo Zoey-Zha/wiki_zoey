@@ -73,6 +73,39 @@ public class CategoryService {
         return pageResp;
     }
 
+    /**
+     * Get all data without pages
+     * @return
+     */
+    public List<CategoryQueryResp> all() {
+
+        CategoryExample example = new CategoryExample();
+        example.setOrderByClause("sort asc");
+        // 增加动态SQL
+//        if (!ObjectUtils.isEmpty(categoryQueryReq.getName())) {
+//            criteria.andNameLike("%" + categoryQueryReq.getName() + "%");
+//        }
+
+        // 后端分页，写在要分页的查询前面，因为它只对一个sql查询生效
+        // PageHelper.startPage(categoryQueryReq.getPage(), categoryQueryReq.getSize());
+        List<Category> categoryList = categoryMapper.selectByExample(example);
+
+        // List<CategoryResp> categoryResps = new ArrayList<>();
+        List<CategoryQueryResp> list = CopyUtil.copyList(categoryList, CategoryQueryResp.class);
+//        for (Category category : categoryList) {
+//            CategoryResp categoryResp = new CategoryResp();
+//            BeanUtils.copyProperties(category,categoryResp);
+////            categoryResp.setId(1234L);
+//            categoryResps.add(categoryResp);
+//        }
+//        CategoryResp categoryResp = new CategoryResp();
+//        Page page = new Page(pageInfo.getTotal(),pageInfo.getPageNum());
+//        categoryResp.setPageInfo(page);
+
+
+        return list;
+    }
+
     public void save(CategorySaveReq req){
         // 如何把CategorySaveReq转换成Category, 我一下子没有到这种方法，只想到必须转换
         Category category = CopyUtil.copy(req,Category.class);
