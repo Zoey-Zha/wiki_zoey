@@ -40,6 +40,9 @@
         <template #cover="{ text: cover}">
           <img v-if="cover" :src="cover"  :alt = "avatar"/>
         </template>
+        <template v-slot:category="{ text, record}">
+          <span>{{getCategoryName(record.category1Id)}} / {{getCategoryName(record.category2Id)}}</span>
+        </template>
         <template v-slot:action="{ text, record }">
           <a-space size="small">
             <a-button type="primary" @click="edit(record)">
@@ -119,14 +122,8 @@
           dataIndex: 'name',
         },
         {
-          title: 'Category1',
-          key: 'category1Id',
-          dataIndex: 'category1Id',
-        },
-        {
-          title: 'Category2',
-          key: 'category2',
-          dataIndex: 'category2Id',
+          title: 'Category',
+          slots: { customRender: 'category' }
         },
         {
           title: 'ViewNum',
@@ -233,6 +230,7 @@
       };
 
       const level1 = ref();
+      let categorys: any;
 
       /**
        * 查询所有分类
@@ -243,13 +241,20 @@
           loading.value = false;
           const data = response.data;
           if (data.success) {
-            const categorys = data.content; // 这里使用局部变量，没有使用响应式变量
+            // const categorys = data.content; // 这里使用局部变量，没有使用响应式变量
+            categorys = data.content; // 这里使用局部变量，没有使用响应式变量
             console.log("原始数据： ", categorys);
 
             level1.value = [];
             level1.value = Tool.array2Tree(categorys,0);
             console.log("树形结构： ",level1);
 
+            // 加载完Category 再加载EBook, 以免getCategoryName还没加载出来无法渲染Category报错
+            // 报错大概是forEach() undefined.
+            handleQuery({
+              page: 1,
+              size: pagination.value.pageSize
+            });
             // 重置分页按钮
           } else {
             message.error(data.message);
@@ -257,6 +262,16 @@
         })
       };
 
+      const getCategoryName = (cid: number) => {
+        let result = "";
+        // console.log(categorys.toString());
+        categorys.forEach((item: any) => {
+          if (item.id === cid) {
+            result = item.name;
+          }
+        });
+        return result;
+      }
 
       /**
        * 删除
@@ -298,10 +313,6 @@
 
       onMounted(() => {
         handleQueryCategory();
-        handleQuery({
-          page: 1,
-          size: pagination.value.pageSize
-        });
       });
 
       return {
@@ -327,8 +338,7 @@
         cancel,
         onSearch,
         handleQuery,
-
-
+        getCategoryName
       }
     }
   });
