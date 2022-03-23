@@ -28,7 +28,7 @@
       <a-table
           :columns="columns"
           :row-key="record => record.id"
-          :data-source="categorys"
+          :data-source="level1"
           :loading="loading"
           :pagination="false"
       >
@@ -90,6 +90,7 @@
       const param = ref();
       param.value = {}
       const categorys = ref();
+      const level1 = ref();
       const search_value = ref();
       // search_value.value = {}; // 需要加Value才能赋值
       //响应式变量，不用使用.value调用？还是不太懂响应式变量
@@ -131,6 +132,12 @@
           const data = response.data;
           if (data.success) {
             categorys.value = data.content;
+            console.log("原始数据： ", categorys.value);
+
+            level1.value = [];
+            level1.value = Tool.array2Tree(categorys.value,0);
+            console.log("树形结构： ",level1);
+
             // 重置分页按钮
           } else {
             message.error(data.message);
@@ -220,7 +227,8 @@
 
       return {
         param,
-        categorys,
+        // categorys,
+        level1,
         columns,
         loading,
         search_value,
