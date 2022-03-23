@@ -6,10 +6,7 @@
           @click="handleClick"
       >
         <a-menu-item key="welcome">
-          <router-link :to="'/'">
-            <MailOutlined />
             <span>Welcome</span>
-          </router-link>
         </a-menu-item>
         <a-sub-menu v-for="item in level1" :key="item.id">
           <template v-slot:title>
@@ -25,7 +22,8 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
       <div class="welcome" v-show="isShowWelcome">
-        <the-welcome></the-welcome>
+<!--        <the-welcome></the-welcome>-->
+        <span>Welcome to my party</span>
       </div>
       <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3 }" :data-source="ebooks">
         <template #renderItem="{ item }">
@@ -118,14 +116,14 @@ export default defineComponent({
     };
 
     const isShowWelcome = ref(true);
-    //let categoryId2 = 0;
+    let categoryId2 = 0;
 
     const handleQueryEbook = () => {
       axios.get("/ebook/ebookList", {
         params: {
           page: 1,
           size: 1000,
-          // categoryId2: categoryId2
+          categoryId2: categoryId2
         }
       }).then((response) => {
         const data = response.data;
@@ -139,7 +137,7 @@ export default defineComponent({
       if (value.key === 'welcome') {
         isShowWelcome.value = true;
       } else {
-        //categoryId2 = value.key;
+        categoryId2 = value.key;
         isShowWelcome.value = false;
         handleQueryEbook();
       }
@@ -148,7 +146,7 @@ export default defineComponent({
 
     onMounted(() => {
       handleQueryCategory();
-      handleQueryEbook();
+      // handleQueryEbook();
     });
 
     return {

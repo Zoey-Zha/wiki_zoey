@@ -44,6 +44,9 @@ public class EbookService {
         if (!ObjectUtils.isEmpty(ebookQueryReq.getName())) {
             criteria.andNameLike("%" + ebookQueryReq.getName() + "%");
         }
+        if (!ObjectUtils.isEmpty(ebookQueryReq.getCategoryId2())) {
+            criteria.andCategory2IdEqualTo(ebookQueryReq.getCategoryId2());
+        }
 
         // 后端分页，写在要分页的查询前面，因为它只对一个sql查询生效
         PageHelper.startPage(ebookQueryReq.getPage(), ebookQueryReq.getSize());
