@@ -76,16 +76,8 @@
       <a-form-item label="名称">
         <a-input v-model:value="ebook.name" />
       </a-form-item>
-      <a-form-item label="分类1">
-        <a-input v-model:value="ebook.category1Id" />
-<!--        <a-cascader-->
-<!--            v-model:value="categoryIds"-->
-<!--            :field-names="{ label: 'name', value: 'id', children: 'children' }"-->
-<!--            :options="level1"-->
-<!--        />-->
-      </a-form-item>
-      <a-form-item label="分类2">
-        <a-input v-model:value="ebook.category2Id" type="textarea" />
+      <a-form-item label="Category">
+        <a-cascader v-model:value="categoryIds" :options="level1" :field-names="{ label: 'name', value: 'id', children: 'children'}"  />
       </a-form-item>
       <a-form-item label="描述">
         <a-input v-model:value="ebook.description" type="textarea" />
@@ -192,14 +184,14 @@
       /**
        * 数组，[100, 101]对应：前端开发 / Vue
        */
-          // const categoryIds = ref();
+      const categoryIds = ref();
       const ebook = ref();
       const modalVisible = ref(false);
       const modalLoading = ref(false);
       const handleModalOk = () => {
         modalLoading.value = true;
-        // ebook.value.category1Id = categoryIds.value[0];
-        // ebook.value.category2Id = categoryIds.value[1]
+        ebook.value.category1Id = categoryIds.value[0];
+        ebook.value.category2Id = categoryIds.value[1]
 
         axios.post("/ebook/save", ebook.value).then((response) => {
           modalLoading.value = false; // 只要又返回，就停止loading
@@ -228,7 +220,7 @@
         modalVisible.value = true;
         ebook.value = Tool.copy(record)
         //ebook.value = Tool.copy(record);
-        //categoryIds.value = [ebook.value.category1Id, ebook.value.category2Id]
+        categoryIds.value = [ebook.value.category1Id, ebook.value.category2Id]
       };
 
       /**
@@ -237,6 +229,32 @@
       const add = () => {
         modalVisible.value = true;
         ebook.value = {};
+        categoryIds.value = [];
+      };
+
+      const level1 = ref();
+
+      /**
+       * 查询所有分类
+       * */
+      const handleQueryCategory = () => {
+        loading.value = true;
+        axios.get("/category/all").then((response) => {
+          loading.value = false;
+          const data = response.data;
+          if (data.success) {
+            const categorys = data.content; // 这里使用局部变量，没有使用响应式变量
+            console.log("原始数据： ", categorys);
+
+            level1.value = [];
+            level1.value = Tool.array2Tree(categorys,0);
+            console.log("树形结构： ",level1);
+
+            // 重置分页按钮
+          } else {
+            message.error(data.message);
+          }
+        })
       };
 
 
@@ -279,6 +297,7 @@
       }
 
       onMounted(() => {
+        handleQueryCategory();
         handleQuery({
           page: 1,
           size: pagination.value.pageSize
@@ -293,6 +312,8 @@
         loading,
         search_value,
         handleTableChange,
+        level1,
+        categoryIds,
 
         edit,
         add,
@@ -306,6 +327,7 @@
         cancel,
         onSearch,
         handleQuery,
+
 
       }
     }
