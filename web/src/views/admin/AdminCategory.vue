@@ -69,7 +69,16 @@
         <a-input v-model:value="category.name" />
       </a-form-item>
       <a-form-item label="Parent">
-        <a-input v-model:value="category.parent" type="textarea" />
+<!--        <a-input v-model:value="category.parent" type="textarea" />-->
+        <a-select
+            ref="select"
+            v-model:value="category.parent"
+        >
+          <a-select-option value="0">Root</a-select-option>
+          <a-select-option v-for="c in level1" :key="c.id" :value="c.id" :disabled="category.id ===c.id">
+            {{c.name}}
+          </a-select-option>
+        </a-select>
       </a-form-item>
       <a-form-item label="Sort">
         <a-input v-model:value="category.sort" type="textarea" />
