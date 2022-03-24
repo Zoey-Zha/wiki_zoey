@@ -69,16 +69,16 @@
         <a-input v-model:value="doc.name" />
       </a-form-item>
       <a-form-item label="Parent">
-<!--        <a-input v-model:value="doc.parent" type="textarea" />-->
-        <a-select
-            ref="select"
+        <a-tree-select
             v-model:value="doc.parent"
+            style="width: 100%"
+            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+            :tree-data="treeSelectData"
+            placeholder="Please select parent"
+            tree-default-expand-all
+            :replaceFields="{title: 'name', key: 'id', value: 'id'}"
         >
-          <a-select-option value="0">Root</a-select-option>
-          <a-select-option v-for="c in level1" :key="c.id" :value="c.id" :disabled="doc.id ===c.id">
-            {{c.name}}
-          </a-select-option>
-        </a-select>
+        </a-tree-select>
       </a-form-item>
       <a-form-item label="Sort">
         <a-input v-model:value="doc.sort" type="textarea" />
@@ -155,11 +155,8 @@
       };
 
 
-      // -------- 表单 ---------
-      /**
-       * 数组，[100, 101]对应：前端开发 / Vue
-       */
-          // const docIds = ref();
+      const treeSelectData = ref();
+      treeSelectData.value = [];
       const doc = ref();
       const modalVisible = ref(false);
       const modalLoading = ref(false);
@@ -185,12 +182,48 @@
         })
       };
 
+      const setDisable = (treeSelectData: any, id: any) => {
+        // console.log(treeSelectData, id);
+        // 遍历数组，即遍历某一层节点
+        for (let i = 0; i < treeSelectData.length; i++) {
+          const node = treeSelectData[i];
+          if (node.id === id) {
+            // 如果当前节点就是目标节点
+            console.log("disabled", node);
+            // 将目标节点设置为disabled
+            node.disabled = true;
+
+            // 遍历所有子节点，将所有子节点全部都加上disabled
+            const children = node.children;
+            if (Tool.isNotEmpty(children)) {
+              for (let j = 0; j < children.length; j++) {
+                setDisable(children, children[j].id)
+              }
+            }
+          } else {
+            // 如果当前节点不是目标节点，则到其子节点再找找看。
+            const children = node.children;
+            if (Tool.isNotEmpty(children)) {
+              setDisable(children, id);
+            }
+          }
+        }
+      };
+
       /**
        * 编辑
        */
       const edit = (record: any) => {
         modalVisible.value = true;
         doc.value = Tool.copy(record)
+
+        //不能选择当前节点及其所有子孙节点
+        treeSelectData.value = Tool.copy(level1.value);
+        setDisable(treeSelectData.value, record.id);
+
+        // 为选择树添加一个"无",前面加一个无
+        treeSelectData.value.unshift({id: 0, name: 'Root'});
+
         //doc.value = Tool.copy(record);
         //docIds.value = [doc.value.doc1Id, doc.value.doc2Id]
       };
@@ -201,6 +234,13 @@
       const add = () => {
         modalVisible.value = true;
         doc.value = {};
+
+        treeSelectData.value = Tool.copy(level1.value);
+        // setDisable(treeSelectData.value, record.id);
+
+        // 为选择树添加一个"无",前面加一个无
+        treeSelectData.value.unshift({id: 0, name: 'Root'});
+
       };
 
 
@@ -241,6 +281,7 @@
         columns,
         loading,
         search_value,
+        treeSelectData,
 
         edit,
         add,
