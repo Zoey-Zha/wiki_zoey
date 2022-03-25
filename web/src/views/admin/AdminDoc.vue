@@ -10,6 +10,21 @@
 <!--          style="width:200px"-->
 <!--          @search="onSearch"-->
 <!--      />-->
+
+<!--      <template>-->
+<!--        <a-tooltip>-->
+<!--          <template #title>prompt text</template>-->
+<!--          EbookName is-->
+<!--        </a-tooltip>-->
+<!--      </template>-->
+<!--      <div :style="wrapStyles">-->
+<!--        <a-tooltip placement="left" title="Prompt Text" :get-popup-container="getPopupContainer">-->
+<!--          <a-button>EbookName-> {{ebookName}}}</a-button>-->
+<!--        </a-tooltip>-->
+<!--        <br />-->
+<!--      </div>-->
+      <a-descriptions :title="'EbookName:  ' + ebookName">
+      </a-descriptions>
       <p>
         <a-form layout="inline" :model="param">
           <a-form-item>
@@ -24,6 +39,7 @@
           </a-form-item>
         </a-form>
       </p>
+
 
       <a-table
           :columns="columns"
@@ -59,7 +75,7 @@
 
   <!-- 编辑框或新加内容框 -->
   <a-modal
-    title="分类表单"
+    title="文档结构"
     v-model:visible="modalVisible"
     :confirm-loading="modalLoading"
     @ok="handleModalOk"
@@ -92,15 +108,26 @@
   import axios from "axios";
   import {message} from "ant-design-vue";
   import {Tool} from "@/util/tool";
+  import {useRoute} from "vue-router";
 
   export default defineComponent({
     name: 'AdminDoc',
     setup: function () {
+      // 路由内置的变量
+      const route = useRoute();
+      console.log("路由： ", route);
+      console.log("route.path: ", route.path);
+      console.log("route.query: ", route.query); // 目前我们用的这个
+      console.log("route.params: ", route.params);
+      console.log("route.fullPath: ", route.fullPath);
+      console.log("route.meta: ", route.meta);
+
       const param = ref();
       param.value = {}
       const docs = ref();
       const level1 = ref();
       const search_value = ref();
+      const ebookName = route.query.EbookName;
       // search_value.value = {}; // 需要加Value才能赋值
       //响应式变量，不用使用.value调用？还是不太懂响应式变量
       // const pagination = ref({
@@ -233,7 +260,9 @@
        */
       const add = () => {
         modalVisible.value = true;
-        doc.value = {};
+        doc.value = {
+          ebookId: route.query.EbookId
+        };
 
         treeSelectData.value = Tool.copy(level1.value);
         // setDisable(treeSelectData.value, record.id);
@@ -282,6 +311,7 @@
         loading,
         search_value,
         treeSelectData,
+        ebookName,
 
         edit,
         add,

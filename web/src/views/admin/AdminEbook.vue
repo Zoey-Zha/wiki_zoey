@@ -45,7 +45,9 @@
         </template>
         <template v-slot:action="{ text, record }">
           <a-space size="small">
-            <router-link to = "/admin/doc">
+<!--            <router-link to = "/admin/doc">-->
+<!--            下面的路径写成/admin/doc/EbookId=了-->
+            <router-link :to = "'/admin/doc?EbookId=' + record.id + '&EbookName=' + record.name">
               <a-button type="primary">
                 Edit Doc
               </a-button>
