@@ -2,8 +2,8 @@ package com.zoey.controller;
 
 import com.zoey.domain.Doc;
 import com.zoey.reps.CommonResp;
-import com.zoey.reps.PageResp;
 import com.zoey.reps.DocQueryResp;
+import com.zoey.reps.PageResp;
 import com.zoey.req.DocQueryReq;
 import com.zoey.req.DocSaveReq;
 import com.zoey.service.DocService;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 // @RestController("/doc") You should put it in RequestMapping
@@ -68,11 +69,13 @@ public class DocController {
         return resp;
     }
 
-    @DeleteMapping("delete/{id}")
-    public CommonResp delete(@PathVariable long id) {
+    @DeleteMapping("delete/{ids}")
+    public CommonResp delete(@PathVariable String ids) {
         CommonResp resp = new CommonResp();
         //List<DocResp> list = docService.getList(docReq);
-        docService.delete(id);
+
+        List<String> strings = Arrays.asList(ids.split(","));
+        docService.delete(strings);
         resp.setMessage("delete the docs");
         return resp;
     }

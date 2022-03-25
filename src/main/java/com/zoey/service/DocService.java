@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service
@@ -25,7 +26,8 @@ public class DocService {
     // private static final Logger logger = LoggerFactory.getLogger(DocService.class);
     private static final Logger logger = LoggerFactory.getLogger(DocService.class);
 
-    @Autowired
+    // @Autowired
+    @Resource
     private DocMapper docMapper;
 
     @Autowired
@@ -127,6 +129,13 @@ public class DocService {
 
     public void delete(long id){
         docMapper.deleteByPrimaryKey(id);
+    }
+    public void delete(List<String> ids){
+        DocExample example = new DocExample();
+        DocExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIn(ids);
+        docMapper.deleteByExample(example);
+//        docMapper.deleteByPrimaryKey(ids);
     }
 
     public Doc getDocById(long id) {

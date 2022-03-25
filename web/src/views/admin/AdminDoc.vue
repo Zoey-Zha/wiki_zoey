@@ -277,7 +277,7 @@
        * 删除
        */
       const handleDel = (id: number) => {
-        axios.delete("/doc/delete/" + id).then((response) => {
+        axios.delete("/doc/delete/1,2,3").then((response) => {
           const data = response.data
           //if (data.success) {
           //};
