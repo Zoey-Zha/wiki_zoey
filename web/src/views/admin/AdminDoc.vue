@@ -172,7 +172,7 @@
 
             level1.value = [];
             level1.value = Tool.array2Tree(docs.value,0);
-            console.log("树形结构： ",level1);
+            console.log("树形结构： ",level1.value);
 
             // 重置分页按钮
           } else {
@@ -237,6 +237,7 @@
         }
       };
 
+
       /**
        * 编辑
        */
@@ -272,18 +273,63 @@
 
       };
 
+      /**
+       * 查找要删除ID的子节点IDs,进行级联删除
+       * */
+      const ids: Array<string> = [];
+      const findDelIds = (treeSelectData: any, id: any) => {
+        // console.log("Level1 in findDelIds: ",treeSelectData);
+        console.log("treeSelectData_length: ", treeSelectData.length);
+        // 遍历数组，即遍历某一层节点
+        for (let i = 0; i < treeSelectData.length; i++) {
+
+          const node = treeSelectData[i];
+          // console.log("测试for循环中的node.id");
+          // console.log("测试打印参数id", id);
+          // console.log("测试for循环中的node.id",node.id);
+
+          if (node.id === id) {
+            // 如果当前节点就是目标节点
+            // console.log("disabled", node);
+            // 将目标节点设置为ids
+            ids.push(node.id);
+            // console.log("Node_ID: ",node.id);
+
+            // 遍历所有子节点
+            const children = node.children;
+            if (Tool.isNotEmpty(children)) {
+              for (let j = 0; j < children.length; j++) {
+                findDelIds(children, children[j].id)
+              }
+            }
+          } else {
+            // 如果当前节点不是目标节点，则到其子节点再找找看。
+            const children = node.children;
+            if (Tool.isNotEmpty(children)) {
+              findDelIds(children, id);
+            }
+          }
+        }
+      };
+
 
       /**
        * 删除
        */
+      // const treeValue = ref();
       const handleDel = (id: number) => {
-        axios.delete("/doc/delete/1,2,3").then((response) => {
+        findDelIds(level1.value, id);
+        // console.log("值level1：",level1);
+        // console.log("值level1.vale：",level1.value);
+
+        // const url = ids;
+        // console.log("要删除的IDs数组结果: ", ids);
+        axios.delete("/doc/delete/" + ids.join(",")).then((response) => {
           const data = response.data
-          //if (data.success) {
-          //};
-          // reload doc list
-          handleQuery();
-        })
+          if (data.success) {
+            handleQuery();
+          }
+        });
       };
 
       const confirm = (id: number) => {
