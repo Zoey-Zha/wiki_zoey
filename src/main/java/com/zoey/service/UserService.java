@@ -4,6 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoey.domain.User;
 import com.zoey.domain.UserExample;
+import com.zoey.exception.BusinessException;
+import com.zoey.exception.BusinessExceptionCode;
 import com.zoey.mapper.UserMapper;
 import com.zoey.reps.PageResp;
 import com.zoey.reps.UserQueryResp;
@@ -55,15 +57,6 @@ public class UserService {
 
         // List<UserResp> userResps = new ArrayList<>();
         List<UserQueryResp> list = CopyUtil.copyList(userList, UserQueryResp.class);
-//        for (User user : userList) {
-//            UserResp userResp = new UserResp();
-//            BeanUtils.copyProperties(user,userResp);
-////            userResp.setId(1234L);
-//            userResps.add(userResp);
-//        }
-//        UserResp userResp = new UserResp();
-//        Page page = new Page(pageInfo.getTotal(),pageInfo.getPageNum());
-//        userResp.setPageInfo(page);
         PageResp<UserQueryResp> pageResp = new PageResp<>();
         pageResp.setList(list);
         pageResp.setTotalNum(pageInfo.getTotal());
@@ -78,10 +71,22 @@ public class UserService {
 
         // 复用save实现新增新增
         if (ObjectUtils.isEmpty(req.getId())){
-            // insert
-            //  = new SnowFlake(1, 1);
-            user.setId(snowFlake.nextId());
-            userMapper.insert(user);
+            // 先检查是否已存在，跟视频中用的判断方法不一样
+            // ObjectUtils.isEmpty(select);
+            User select = selectByLoginName(req.getLoginName());
+            if (select == null) {
+                user.setId(snowFlake.nextId());
+                userMapper.insert(user);
+            } else {
+                // 用户已存在，这个function没有返回值，这里抛出异常，这里是自定义异常
+                // 关注下为什么不用try catch,其实我不太理解
+                // 抛出RuntimeException不需要try catch?
+                // 我们这种方法是为了统一管理异常？
+                // BusinessExceptionCode是这样用的啊，这种枚举真的不知道，作者说的这种方法是一个好方法吗
+                throw new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXIST);
+
+            }
+
 
         } else {
             // update
@@ -96,5 +101,17 @@ public class UserService {
 
     public User getUserById(long id) {
         return userMapper.selectByPrimaryKey(id);
+    }
+
+    public User selectByLoginName (String loginName) {
+        UserExample example = new UserExample();
+        UserExample.Criteria criteria = example.createCriteria();
+        // 所以查询条件写到criteria
+        criteria.andLoginNameEqualTo(loginName);
+        // 固定的范式
+        List<User> userList = userMapper.selectByExample(example);
+        // 视频中用的方法,我是觉得没必要那么麻烦
+        // CollectionUtils.isEmpty(userList);
+        return userList.isEmpty()? null : userList.get(0);
     }
 }

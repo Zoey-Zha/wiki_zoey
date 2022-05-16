@@ -52,4 +52,5 @@ public class UserController {
     public User getUser(){
         return userService.getUserById(1);
     }
+
 }

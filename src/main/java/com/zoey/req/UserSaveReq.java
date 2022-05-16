@@ -3,7 +3,6 @@ package com.zoey.req;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 public class UserSaveReq {
     private Long id;
@@ -16,7 +15,8 @@ public class UserSaveReq {
 
     @NotNull(message = "密码不能为空")
     @Length(min = 6, max = 20, message = "密码6～20位")
-    @Pattern(regexp = "^")
+    // @Pattern(regexp = "^")
+    // message = "你是谁"，原来的消息"需要。。。"就没有了
     private String password;
 
     public Long getId() {
