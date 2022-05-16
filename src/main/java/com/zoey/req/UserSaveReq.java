@@ -1,7 +1,5 @@
 package com.zoey.req;
 
-import org.hibernate.validator.constraints.Length;
-
 import javax.validation.constraints.NotNull;
 
 public class UserSaveReq {
@@ -14,7 +12,7 @@ public class UserSaveReq {
     private String name;
 
     @NotNull(message = "密码不能为空")
-    @Length(min = 6, max = 20, message = "密码6～20位")
+    // @Length(min = 6, max = 20, message = "密码6～20位")
     // @Pattern(regexp = "^")
     // message = "你是谁"，原来的消息"需要。。。"就没有了
     private String password;

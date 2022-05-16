@@ -90,7 +90,11 @@ public class UserService {
 
         } else {
             // update
-            userMapper.updateByPrimaryKey(user);
+            // userMapper.updateByPrimaryKey(user);
+            user.setLoginName(null);
+            // 其实不太理解，只有当user的值不为空才会被更新，否则不会更新
+            // 由于上面清空了LoginName，所以它是null,无论如何也不会被更新
+            userMapper.updateByPrimaryKeySelective(user);
         }
 
     }
