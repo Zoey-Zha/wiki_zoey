@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://rm-8vb1e746ez02l37260o.mysql.zhangbei.rds.aliyuncs.com/wikidev?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://rm-8vbt8itis1bqz97960o.mysql.zhangbei.rds.aliyuncs.com/wikidev?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: wikidev
     password: 1qaz!QAZ
     driver-class-name: com.mysql.cj.jdbc.Driver
