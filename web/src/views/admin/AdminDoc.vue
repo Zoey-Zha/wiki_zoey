@@ -99,6 +99,9 @@
       <a-form-item label="Sort">
         <a-input v-model:value="doc.sort" type="textarea" />
       </a-form-item>
+      <a-form-item label="Content">
+        <div id="content"></div>
+      </a-form-item>
     </a-form>
   </a-modal>
 
@@ -109,6 +112,7 @@
   import {message} from "ant-design-vue";
   import {Tool} from "@/util/tool";
   import {useRoute} from "vue-router";
+  import E from 'wangeditor'
 
   export default defineComponent({
     name: 'AdminDoc',
@@ -128,6 +132,9 @@
       const level1 = ref();
       const search_value = ref();
       const ebookName = route.query.EbookName;
+      // const editor = new E('#content');
+      // editor.create();
+
       // search_value.value = {}; // 需要加Value才能赋值
       //响应式变量，不用使用.value调用？还是不太懂响应式变量
       // const pagination = ref({
@@ -254,6 +261,10 @@
 
         //doc.value = Tool.copy(record);
         //docIds.value = [doc.value.doc1Id, doc.value.doc2Id]
+
+        // setTimeout(function () {
+        //   editor.create();
+        //   },100);
       };
 
       /**
@@ -271,6 +282,9 @@
         // 为选择树添加一个"无",前面加一个无
         treeSelectData.value.unshift({id: 0, name: 'Root'});
 
+        // setTimeout(function () {
+        //   editor.create();
+        // },100);
       };
 
       /**
@@ -346,6 +360,7 @@
       }
 
       onMounted(() => {
+        // editor.create();// 放在setup不行，放在这里也不行
         handleQuery();
       });
 

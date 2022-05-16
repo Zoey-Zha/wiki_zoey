@@ -22,7 +22,7 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://rm-8vb1e746ez02l37260o.mysql.zhangbei.rds.aliyuncs.com:3306/wikidev"
+                        connectionURL="jdbc:mysql://rm-8vbt8itis1bqz97960o.mysql.zhangbei.rds.aliyuncs.com:3306/wikidev"
                         userId="wikidev"
                         password="1qaz!QAZ">
         </jdbcConnection>
@@ -46,7 +46,7 @@
         <!--<table tableName="category"/>-->
         <!--<table tableName="doc"/>-->
         <!--<table tableName="content"/>-->
-        <!--<table tableName="user"/>-->
+        <table tableName="user"/>
         <!--<table tableName="demo"/>-->
     </context>
 </generatorConfiguration>
