@@ -100,3 +100,5 @@ insert into `category` (id, parent, name, sort) values (501, 500, '服务器', 5
 insert into `category` (id, parent, name, sort) values (502, 500, '开发工具', 502);
 insert into `category` (id, parent, name, sort) values (503, 500, '热门服务端语言', 503);
 
+insert into `user` (id, `login_name`, `name`, `password`) values (1, 'test', '测试', 'test');
+
