@@ -67,7 +67,7 @@ public class UserService {
     public void save(UserSaveReq req){
         // 如何把UserSaveReq转换成User, 我一下子没有到这种方法，只想到必须转换
         User user = CopyUtil.copy(req,User.class);
-        System.out.println(user.toString());
+        // System.out.println(user.toString());
 
         // 复用save实现新增新增
         if (ObjectUtils.isEmpty(req.getId())){
@@ -79,20 +79,17 @@ public class UserService {
                 userMapper.insert(user);
             } else {
                 // 用户已存在，这个function没有返回值，这里抛出异常，这里是自定义异常
-                // 关注下为什么不用try catch,其实我不太理解
+                // 关注下为什么不用try catch,其实我不太理解, Q: 要不然太多try catch，不好统一管理
                 // 抛出RuntimeException不需要try catch?
-                // 我们这种方法是为了统一管理异常？
+                // 我们这种方法是为了统一管理异常？是的
                 // BusinessExceptionCode是这样用的啊，这种枚举真的不知道，作者说的这种方法是一个好方法吗
                 throw new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXIST);
-
             }
-
-
         } else {
             // update
             // userMapper.updateByPrimaryKey(user);
             user.setLoginName(null);
-            // 其实不太理解，只有当user的值不为空才会被更新，否则不会更新
+            // 其实不太理解：只有当user属性不为空才会被更新，否则不会更新
             // 由于上面清空了LoginName，所以它是null,无论如何也不会被更新
             userMapper.updateByPrimaryKeySelective(user);
         }

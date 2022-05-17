@@ -8,6 +8,7 @@ import com.zoey.req.UserQueryReq;
 import com.zoey.req.UserSaveReq;
 import com.zoey.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,9 @@ public class UserController {
 
     @PostMapping("save")
     public CommonResp save(@RequestBody @Validated UserSaveReq req) {
+        // 保存时对密码加密，DigestUtils是spring内置的
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+
         CommonResp resp = new CommonResp();
         //List<UserResp> list = userService.getList(userReq);
         userService.save(req);
