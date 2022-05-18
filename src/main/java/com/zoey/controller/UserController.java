@@ -3,8 +3,11 @@ package com.zoey.controller;
 import com.zoey.domain.User;
 import com.zoey.reps.CommonResp;
 import com.zoey.reps.PageResp;
+import com.zoey.reps.UserLoginResp;
 import com.zoey.reps.UserQueryResp;
+import com.zoey.req.UserLoginReq;
 import com.zoey.req.UserQueryReq;
+import com.zoey.req.UserResetPasswordReq;
 import com.zoey.req.UserSaveReq;
 import com.zoey.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +58,34 @@ public class UserController {
     @RequestMapping("getUser")
     public User getUser(){
         return userService.getUserById(1);
+    }
+
+    // 参数要改？不使用UserSaveReq?
+    @PostMapping("reset-password")
+    public CommonResp resetPassword(@RequestBody @Validated UserResetPasswordReq req) {
+        // 保存时对密码加密，DigestUtils是spring内置的
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+
+        CommonResp resp = new CommonResp();
+        //List<UserResp> list = userService.getList(userReq);
+        userService.resetPassword(req);
+        resp.setMessage("reset password");
+        return resp;
+    }
+
+
+    @PostMapping("login")
+    public CommonResp login(@RequestBody @Validated UserLoginReq req) {
+        // 保存时对密码加密，DigestUtils是spring内置的
+        // 登录的时候也应该对密码再次加密，这样跟数据库对比的时候就是一致的，否则不一致
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+
+        CommonResp<UserLoginResp> resp = new CommonResp();
+        //List<UserResp> list = userService.getList(userReq);
+        UserLoginResp userLoginResp = userService.login(req);
+        resp.setContent(userLoginResp);
+        resp.setMessage("login");
+        return resp;
     }
 
 }

@@ -8,8 +8,11 @@ import com.zoey.exception.BusinessException;
 import com.zoey.exception.BusinessExceptionCode;
 import com.zoey.mapper.UserMapper;
 import com.zoey.reps.PageResp;
+import com.zoey.reps.UserLoginResp;
 import com.zoey.reps.UserQueryResp;
+import com.zoey.req.UserLoginReq;
 import com.zoey.req.UserQueryReq;
+import com.zoey.req.UserResetPasswordReq;
 import com.zoey.req.UserSaveReq;
 import com.zoey.util.CopyUtil;
 import com.zoey.util.SnowFlake;
@@ -115,5 +118,39 @@ public class UserService {
         // 视频中用的方法,我是觉得没必要那么麻烦
         // CollectionUtils.isEmpty(userList);
         return userList.isEmpty()? null : userList.get(0);
+    }
+
+
+    public void resetPassword(UserResetPasswordReq req){
+        // 如何把UserSaveReq转换成User, 我一下子没有到这种方法，只想到必须转换
+        User user = CopyUtil.copy(req,User.class);
+        userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    public UserLoginResp login (UserLoginReq userLoginReq) {
+        User userDb = this.selectByLoginName(userLoginReq.getLoginName());
+        if (userDb == null) {
+            // 找不到用户
+            // new LoggerFactory();
+            // LOG.info("用户不存在")；
+            throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+        } else {
+            // userLoginReq.getPassword().equals(userDb.getPassword());
+            // userLoginReq.getPassword() == userDb.getPassword(),这样写不行？？
+            // 比较的是两个字符串地址是否相等
+            String password = userDb.getPassword();
+            String password1 = userLoginReq.getPassword();
+            if (userLoginReq.getPassword().equals(userDb.getPassword())) {
+                // 登录成功
+                // 这样new 一个对象有什么不好的地方吗？为什么使用copy方法？
+//                UserLoginResp userLoginResp = new UserLoginResp();
+                UserLoginResp userLoginResp = CopyUtil.copy(userDb, UserLoginResp.class);
+                // userLoginResp.setLoginName(userLoginReq.getLoginName());
+                return userLoginResp;
+            } else {
+                // 密码错误
+                throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+            }
+        }
     }
 }
