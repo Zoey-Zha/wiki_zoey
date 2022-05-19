@@ -1,6 +1,6 @@
 <template>
   <a-layout-footer style="text-align: center">
-    Wiki Design {{user.name}} ©2022 Created by Zoey ZHA
+    Wiki Design <span v-show="user.id">Welcome {{user.name}}</span> ©2022 Created by Zoey ZHA
   </a-layout-footer>
 </template>
 
