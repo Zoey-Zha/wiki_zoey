@@ -1,10 +1,32 @@
 package com.zoey.reps;
 
 public class UserLoginResp {
+    // implements Serializable
     // 登录成功应该返回什么字段呢？
     private Long id;
 
     private String loginName;
+
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    // 虽然snowlake生成的是long 类型的数据，但是使用String更通用？
+    private String token;
 
     // @Length(min = 6, max = 20, message = "密码6～20位")
     // @Pattern(regexp = "^")
@@ -28,13 +50,11 @@ public class UserLoginResp {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", loginName=").append(loginName);
-        sb.append("]");
-        return sb.toString();
+        return "UserLoginResp{" +
+                "id=" + id +
+                ", loginName='" + loginName + '\'' +
+                ", name='" + name + '\'' +
+                ", token='" + token + '\'' +
+                '}';
     }
 }

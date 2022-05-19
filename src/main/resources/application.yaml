@@ -4,6 +4,11 @@ spring:
     username: wikidev
     password: 1qaz!QAZ
     driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: r-uf6ljbcdaxobsifyctpd.redis.rds.aliyuncs.com
+    port: 6379
+    password: Redis000
+
 # 配置Mybatis
 mybatis:
   mapper-locations: classpath:/mapper/**/*.xml
@@ -15,4 +20,5 @@ server:
 # 增加数据库查询结果日志打印，打印所有sql日志，参数，结果
 logging.level.com.zoey.mapper:
   trace
+
 

@@ -1,1 +1,17 @@
 GET http://localhost:8090/user/userList
+
+### new,没有结果 712604633485568,success
+GET http://localhost:8090/redis/get/712604633485568
+Accept: application/json
+
+### set
+POST http://localhost:8090/redis/set/123/test
+
+###,这个有结果
+GET http://localhost:8090/redis/get/123
+
+###
+POST http://localhost:8090/redis/set/100/zoey
+
+###,这个有结果
+GET http://localhost:8090/redis/get/100

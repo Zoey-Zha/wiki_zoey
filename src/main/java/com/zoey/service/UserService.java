@@ -138,8 +138,8 @@ public class UserService {
             // userLoginReq.getPassword().equals(userDb.getPassword());
             // userLoginReq.getPassword() == userDb.getPassword(),这样写不行？？
             // 比较的是两个字符串地址是否相等
-            String password = userDb.getPassword();
-            String password1 = userLoginReq.getPassword();
+            // String password = userDb.getPassword();
+            // String password1 = userLoginReq.getPassword();
             if (userLoginReq.getPassword().equals(userDb.getPassword())) {
                 // 登录成功
                 // 这样new 一个对象有什么不好的地方吗？为什么使用copy方法？
@@ -148,6 +148,7 @@ public class UserService {
                 // userLoginResp.setLoginName(userLoginReq.getLoginName());
                 return userLoginResp;
             } else {
+                // wrong passwords beyond five times, lock the user
                 // 密码错误
                 throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
             }

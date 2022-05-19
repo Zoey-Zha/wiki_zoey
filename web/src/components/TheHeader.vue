@@ -21,22 +21,25 @@
       <a-menu-item key="/about">
         <router-link to = '/about'>About</router-link>
       </a-menu-item>
-      <a class="login-menu" @click="showLoginModal">
-        <span>login</span>
+      <a class="login-menu" v-show="user.id" >
+        <span>Hi: {{user.name}}</span>
+      </a>
+      <a class="login-menu" v-show="!user.id" @click="showLoginModal">
+        <span>Login</span>
       </a>
     </a-menu>
 
     <a-modal
-        title="登录"
+        title="Login"
         v-model:visible="loginModalVisible"
         :confirm-loading="loginModalLoading"
         @ok="login"
     >
       <a-form :model="loginUser" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
-        <a-form-item label="登录名">
+        <a-form-item label="LoginName">
           <a-input v-model:value="loginUser.loginName" />
         </a-form-item>
-        <a-form-item label="密码">
+        <a-form-item label="Password">
           <a-input v-model:value="loginUser.password" type="password" />
         </a-form-item>
       </a-form>
@@ -57,6 +60,8 @@ export default defineComponent({
   name: 'TheHeader',
   setup () {
     // 登录后保存
+    const user = ref();
+    user.value = {};
     // const user = computed(() => store.state.user);
 
     // 用来登录
@@ -82,6 +87,7 @@ export default defineComponent({
         if (data.success) {
           loginModalVisible.value = false;
           message.success("登录成功！");
+          user.value = data.content;
           store.commit("setUser", data.content);
         } else {
           message.error(data.message);
@@ -95,7 +101,7 @@ export default defineComponent({
       showLoginModal,
       loginUser,
       login,
-      // user,
+      user,
       // logout
     }
   }
@@ -104,19 +110,10 @@ export default defineComponent({
 </script>
 
 <style>
-.logo {
-  width: 120px;
-  height: 31px;
-  /*background: rgba(255, 255, 255, 0.2);*/
-  /*margin: 16px 28px 16px 0;*/
-  float: left;
-  color: white;
-  font-size: 18px;
-}
-.login-menu {
-  float: right;
-  color: white;
-  padding-left: 10px;
-}
+  .login-menu {
+    float: left;
+    color: white;
+    padding-left: 10px;
+ }
 </style>
 

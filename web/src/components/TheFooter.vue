@@ -1,17 +1,21 @@
 <template>
   <a-layout-footer style="text-align: center">
-    Wiki Design ©2022 Created by Zoey ZHA
+    Wiki Design {{user.name}} ©2022 Created by Zoey ZHA
   </a-layout-footer>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
+import store from "@/store";
 
 export default defineComponent({
   name: 'TheFooter',
-  props: {
-    msg: String,
-  },
+  setup() {
+    const user = computed(() => store.state.user);
+    return {
+      user
+    }
+  }
 });
 </script>
 <style>

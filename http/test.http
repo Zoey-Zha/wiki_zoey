@@ -1,6 +1,10 @@
 #GET http://localhost:8080/hello
 #Accept: application/json
 
+# Get redis
+GET http://localhost:8090/redis/get/712589542822144
+
+###
 POST http://localhost:8080/hello
 Content-Type: application/x-www-form-urlencoded
 //Content-Type: application/json
