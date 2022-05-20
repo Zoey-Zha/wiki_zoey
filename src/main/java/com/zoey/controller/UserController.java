@@ -108,10 +108,19 @@ public class UserController {
         // 问题1 : redis的数据放在哪里了？为什么这里使用redis而不是放在数据库呢？
         // 问题2 : 当然redis可以设置过期时间，这是一个优点，那么思考下还有其他原因吗？因为之前听说redis缓存数据库
         // 问题3 : 序列化，那么我们应该序列化哪一个类？视频中是UserLoginResp, tried, it works. 也可以通过JSON实现
-        redisTemplate.opsForValue().set(token, JSONObject.toJSONString(userLoginResp), 3600 * 24, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(token.toString(), JSONObject.toJSONString(userLoginResp), 3600 * 24, TimeUnit.SECONDS);
         // redisTemplate.opsForValue().set(token, userLoginResp, 3600 * 24, TimeUnit.SECONDS);
         resp.setContent(userLoginResp);
         resp.setMessage("login");
+        return resp;
+    }
+
+    @GetMapping("logout/{token}")
+    public CommonResp logout(@PathVariable String token) {
+        CommonResp resp = new CommonResp();
+        redisTemplate.delete(token);
+        LOG.info("delete token {}" + token);
+        resp.setMessage("退出登录");
         return resp;
     }
 

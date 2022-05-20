@@ -21,11 +21,21 @@
       <a-menu-item key="/about">
         <router-link to = '/about'>About</router-link>
       </a-menu-item>
-      <a class="login-menu" v-show="user.id" >
-        <span>Hi: {{user.name}}</span>
+      <a-popconfirm
+          title="确认退出登录?"
+          ok-text="是"
+          cancel-text="否"
+          @confirm="logout()"
+      >
+        <a class="login-menu" v-show="user.id">
+          <span>退出</span>
+        </a>
+      </a-popconfirm>
+      <a class="login-menu" v-show="user.id">
+        <span>您好：{{user.name}}</span>
       </a>
       <a class="login-menu" v-show="!user.id" @click="showLoginModal">
-        <span>Login</span>
+        <span>登录</span>
       </a>
     </a-menu>
 
@@ -94,6 +104,20 @@ export default defineComponent({
       });
     };
 
+    // 退出登录
+    const logout = () => {
+      console.log("退出登录开始");
+      axios.get('/user/logout/' + user.value.token).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          message.success("退出登录成功！");
+          store.commit("setUser", {});
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+
     return {
       loginModalVisible,
       loginModalLoading,
@@ -101,7 +125,7 @@ export default defineComponent({
       loginUser,
       login,
       user,
-      // logout
+      logout
     }
   }
 
@@ -109,10 +133,19 @@ export default defineComponent({
 </script>
 
 <style>
-  .login-menu {
+  .logo {
+    width: 120px;
+    height: 31px;
+    /*background: rgba(255, 255, 255, 0.2);*/
+    /*margin: 16px 28px 16px 0;*/
     float: left;
     color: white;
+    font-size: 18px;
+  }
+  .login-menu {
+    float: right;
+    color: white;
     padding-left: 10px;
- }
+  }
 </style>
 
