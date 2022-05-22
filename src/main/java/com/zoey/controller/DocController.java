@@ -1,6 +1,5 @@
 package com.zoey.controller;
 
-import com.zoey.domain.Doc;
 import com.zoey.reps.CommonResp;
 import com.zoey.reps.DocQueryResp;
 import com.zoey.reps.PageResp;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,22 +23,6 @@ public class DocController {
     @Autowired
     private DocService docService;
 
-/*
-    @RequestMapping("docList")
-    public List<doc> getList() {
-        return docService.getList();
-    }
-*/
-    /*
-    @RequestMapping("docList")
-    public CommonResp getList() {
-        CommonResp resp = new CommonResp();
-        List<doc> list = docService.getList();
-        resp.setContent(list);
-        resp.setMessage("Get all the docs");
-        return resp;
-    }
-     */
 
     @GetMapping("docList")
     public CommonResp getList(@Validated DocQueryReq docQueryReq) { // 加上@Validated 开启校验参数
@@ -80,8 +64,30 @@ public class DocController {
         return resp;
     }
 
-    @RequestMapping("getDoc")
-    public Doc getDoc(){
-        return docService.getDocById(1);
+    @GetMapping("/list")
+    public CommonResp list(@Valid DocQueryReq req) {
+        CommonResp<PageResp<DocQueryResp>> resp = new CommonResp<>();
+        PageResp<DocQueryResp> list = docService.list(req);
+        resp.setContent(list);
+        return resp;
     }
+
+
+    @GetMapping("/find-content/{id}")
+    public CommonResp findContent(@PathVariable Long id) {
+        CommonResp<String> resp = new CommonResp<>();
+        String content = docService.findContent(id);
+        resp.setContent(content);
+        return resp;
+    }
+
+    @GetMapping("/vote/{id}")
+    public CommonResp vote(@PathVariable Long id) {
+        CommonResp commonResp = new CommonResp();
+        docService.vote(id);
+        return commonResp;
+    }
+
+
+
 }

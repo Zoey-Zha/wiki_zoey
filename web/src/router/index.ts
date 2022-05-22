@@ -5,6 +5,7 @@ import AdminEbook from '../views/admin/AdminEbook.vue'
 import AdminCategory from '../views/admin/AdminCategory.vue'
 import AdminDoc from '../views/admin/AdminDoc.vue'
 import AdminUser from '../views/admin/AdminUser.vue'
+import Doc from '../views/Doc.vue'
 import {Tool} from "@/util/tool";
 import store from "@/store";
 
@@ -42,9 +43,9 @@ const routes: Array<RouteRecordRaw> = [
     path: '/admin/doc',
     name: 'AdminDoc',
     component: AdminDoc,
-    meta: {
-      loginRequire: true
-    }
+    // meta: {
+    //   loginRequire: true
+    // }
   },
   {
     path: '/about',
@@ -54,7 +55,13 @@ const routes: Array<RouteRecordRaw> = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     // component: () => import(/* webpackChunkName: "about" */ '../views/about.vue')
+  },
+  {
+    path: '/doc',
+    name: 'Doc',
+    component: Doc
   }
+
 ]
 
 const router = createRouter({
