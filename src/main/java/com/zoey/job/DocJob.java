@@ -23,8 +23,8 @@ public class DocJob {
     /**
      * update at noon every day
      */
-//     @Scheduled(cron = "0 0 12 * * ?")
-    @Scheduled(cron = "0/5 * * * * ? ")
+    @Scheduled(cron = "0 0 12 * * ?")
+//    @Scheduled(cron = "0/5 * * * * ? ")
     public void cron() {
          // 增加日志流水号
 //         MDC.put("LOG_ID", String.valueOf(snowFlake.nextId()));
