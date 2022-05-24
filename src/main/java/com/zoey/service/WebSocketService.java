@@ -21,8 +21,10 @@ public class WebSocketService {
     private SnowFlake snowFlake;
 
     @Async
-    public void sendInfo(String message) {
-        MDC.put("LOG_ID", String.valueOf(snowFlake.nextId()));
+    public void sendInfo(String message, String LOG_ID) {
+        // 日志流水号继承vote service
+
+        MDC.put("LOG_ID", LOG_ID);
         webSocketServer.sendInfo(message);
         LOG.info("推送消息了吗？{}",message);
     }

@@ -20,6 +20,7 @@ import com.zoey.util.RequestContext;
 import com.zoey.util.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -307,7 +308,8 @@ public class DocService {
         // 尝试解藕，异步化，使用新的线程Thread
 //        webSocketServer.sendInfo("【" + docDb.getName() + "】Liked!");
         // 单一设计原则，docDb还是在这里获取
-        webSocketService.sendInfo("【" + docDb.getName() + "】Liked!");
+        String LOG_ID = MDC.get("LOG_ID");
+        webSocketService.sendInfo("【" + docDb.getName() + "】Liked!", LOG_ID);
 
     }
 
