@@ -18,6 +18,7 @@ import com.zoey.util.CopyUtil;
 import com.zoey.util.RedisUtil;
 import com.zoey.util.RequestContext;
 import com.zoey.util.SnowFlake;
+import com.zoey.websocket.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -48,11 +49,14 @@ public class DocService {
     @Resource
     public RedisUtil redisUtil;
 
+    @Resource
+    public WebSocketServer webSocketServer;
+
 //    @Resource
 //    public WsService wsService;
-
-    // @Resource
-    // private RocketMQTemplate rocketMQTemplate;
+//
+//     @Resource
+//     private RocketMQTemplate rocketMQTemplate;
 
 
 //    public List<Doc> getList() {
@@ -295,10 +299,13 @@ public class DocService {
         }
 
         // 推送消息
-//        Doc docDb = docMapper.selectByPrimaryKey(id);
+        Doc docDb = docMapper.selectByPrimaryKey(id);
 //        String logId = MDC.get("LOG_ID");
 //        wsService.sendInfo("【" + docDb.getName() + "】被点赞！", logId);
-        // rocketMQTemplate.convertAndSend("VOTE_TOPIC", "【" + docDb.getName() + "】被点赞！");
+//        rocketMQTemplate.convertAndSend("VOTE_TOPIC", "【" + docDb.getName() + "】被点赞！");
+
+        webSocketServer.sendInfo("【" + docDb.getName() + "】Liked!");
+
     }
 
     public void updateEbookInfo() {
