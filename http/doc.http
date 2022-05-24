@@ -1,1 +1,4 @@
 GET http://localhost:8090/doc/all
+
+###
+GET http://localhost:8090/doc/all/1

@@ -34,15 +34,24 @@ public class DocController {
         return resp;
     }
 
-    @GetMapping("all")
-    public CommonResp all() { // 加上@Validated 开启校验参数
+    // all前不应该有"/"
+    @GetMapping("all/{ebookId}")
+    public CommonResp all(@PathVariable String ebookId) {
         CommonResp<List<DocQueryResp>> resp = new CommonResp<>();
-        //List<DocResp> list = docService.getList(docReq);
-        List<DocQueryResp> list = docService.all();
+        List<DocQueryResp> list = docService.all(ebookId);
         resp.setContent(list);
-        resp.setMessage("Get all the docs");
         return resp;
     }
+
+//    @GetMapping("all")
+//    public CommonResp all() { // 加上@Validated 开启校验参数
+//        CommonResp<List<DocQueryResp>> resp = new CommonResp<>();
+//        //List<DocResp> list = docService.getList(docReq);
+//        List<DocQueryResp> list = docService.all();
+//        resp.setContent(list);
+//        resp.setMessage("Get all the docs");
+//        return resp;
+//    }
 
     @PostMapping("save")
     public CommonResp save(@RequestBody @Validated DocSaveReq req) {

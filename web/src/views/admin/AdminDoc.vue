@@ -137,6 +137,8 @@ export default defineComponent({
     const treeSelectData = ref();
     treeSelectData.value = [];
 
+    let editor: E;
+
     const columns = [
       {
         title: '名称',
@@ -171,7 +173,10 @@ export default defineComponent({
       loading.value = true;
       // 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑，则列表显示的还是编辑前的数据
       level1.value = [];
-      axios.get("/doc/all/" + route.query.ebookId).then((response) => {
+      //route.query.EbookId
+      console.log("ebookId：", route.query.ebookId); //undefined
+      console.log("EbookId：", route.query.EbookId);
+      axios.get("/doc/all/" + route.query.EbookId).then((response) => {
         loading.value = false;
         const data = response.data;
         if (data.success) {
@@ -195,15 +200,16 @@ export default defineComponent({
     // -------- 表单 ---------
     const doc = ref();
     doc.value = {
-      ebookId: route.query.ebookId
+      ebookId: route.query.EbookId
     };
     const modalVisible = ref(false);
     const modalLoading = ref(false);
-    const editor = new E('#content');
+
 
     const handleSave = () => {
       modalLoading.value = true;
       doc.value.content = editor.txt.html();
+      // console.log("doc.value.content: " + doc.value.content);
       axios.post("/doc/save", doc.value).then((response) => {
         modalLoading.value = false;
         const data = response.data; // data = commonResp
@@ -325,7 +331,7 @@ export default defineComponent({
       editor.txt.html("");
       modalVisible.value = true;
       doc.value = {
-        ebookId: route.query.ebookId
+        ebookId: route.query.EbookId
       };
 
       treeSelectData.value = Tool.copy(level1.value) || [];
@@ -373,14 +379,14 @@ export default defineComponent({
 
     onMounted(() => {
       handleQuery();
-
+      editor = new E('#content');
       editor.config.zIndex = 0;
       editor.create();
     });
 
     return {
       param,
-      // docs,
+      docs,
       level1,
       columns,
       loading,
