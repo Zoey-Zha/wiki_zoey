@@ -18,10 +18,10 @@ import com.zoey.util.CopyUtil;
 import com.zoey.util.RedisUtil;
 import com.zoey.util.RequestContext;
 import com.zoey.util.SnowFlake;
-import com.zoey.websocket.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
@@ -50,7 +50,7 @@ public class DocService {
     public RedisUtil redisUtil;
 
     @Resource
-    public WebSocketServer webSocketServer;
+    public WebSocketService webSocketService;
 
 //    @Resource
 //    public WsService wsService;
@@ -234,11 +234,11 @@ public class DocService {
     /**
      * 保存
      */
-    // @Transactional
+     @Transactional
     public void save(DocSaveReq req) {
         Doc doc = CopyUtil.copy(req, Doc.class);
         Content content = CopyUtil.copy(req, Content.class);
-        LOG.info("content的内容是空吗：", content.getContent()); // yes
+        // LOG.info("content的内容是空吗：", content.getContent()); // yes
         if (ObjectUtils.isEmpty(req.getId())) {
             // 新增
             doc.setId(snowFlake.nextId());
@@ -304,9 +304,14 @@ public class DocService {
 //        wsService.sendInfo("【" + docDb.getName() + "】被点赞！", logId);
 //        rocketMQTemplate.convertAndSend("VOTE_TOPIC", "【" + docDb.getName() + "】被点赞！");
 
-        webSocketServer.sendInfo("【" + docDb.getName() + "】Liked!");
+        // 尝试解藕，异步化，使用新的线程Thread
+//        webSocketServer.sendInfo("【" + docDb.getName() + "】Liked!");
+        // 单一设计原则，docDb还是在这里获取
+        webSocketService.sendInfo("【" + docDb.getName() + "】Liked!");
 
     }
+
+
 
     public void updateEbookInfo() {
         docMapperCust.updateEbookInfo();
