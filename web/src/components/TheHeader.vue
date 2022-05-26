@@ -1,6 +1,6 @@
 <template>
   <a-layout-header class="header">
-    <div class="logo" />
+    <div class="logo">Zoey Wiki</div>
     <a-menu
         theme="dark"
         mode="horizontal"
@@ -18,9 +18,13 @@
       <a-menu-item key="/admin/category" :style="user.id? {}:{display:'none'}">
         <router-link to = "/admin/category">Category</router-link>
       </a-menu-item>
-      <a-menu-item key="/about">
+      <a-menu-item key="/about" :style="user.id? {}:{display:'none'}">
         <router-link to = '/about'>About</router-link>
       </a-menu-item>
+
+<!--      <a class="login-menu" v-show="user.id">-->
+<!--        <span>您好：{{user.name}}</span>-->
+<!--      </a>-->
       <a-popconfirm
           title="确认退出登录?"
           ok-text="是"
@@ -31,12 +35,10 @@
           <span>退出</span>
         </a>
       </a-popconfirm>
-      <a class="login-menu" v-show="user.id">
-        <span>您好：{{user.name}}</span>
-      </a>
       <a class="login-menu" v-show="!user.id" @click="showLoginModal">
         <span>登录</span>
       </a>
+
     </a-menu>
 
     <a-modal
@@ -77,7 +79,7 @@ export default defineComponent({
     // 用来登录
     const loginUser = ref({
       loginName: "test",
-      password: "test123"
+      password: "test"
     });
 
     const loginModalVisible = ref(false);

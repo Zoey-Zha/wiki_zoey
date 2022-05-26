@@ -1,5 +1,6 @@
 <template>
-  <a-layout-footer style="text-align: center">
+  <a-layout-footer class = "fixed-bottom" style="text-align: center">
+<!--    footer{height:100px;margin-top:-100px;background-color: #ffc0cb;}-->
     Wiki Design <span v-show="user.id">Welcome {{user.name}}</span> ©2022 Created by Zoey ZHA
   </a-layout-footer>
 </template>
@@ -83,4 +84,6 @@ export default defineComponent({
 .site-layout-background {
   background: #fff;
 }
+.fixed-bottom
+{position: fixed;bottom: 0;width:100%;}
 </style>

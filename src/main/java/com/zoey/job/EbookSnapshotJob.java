@@ -23,7 +23,7 @@ public class EbookSnapshotJob {
     private SnowFlake snowFlake;
 
 //    @Scheduled(cron = "0 0 12 * * ?")
-    @Scheduled(cron = "0/5 * * * * ?")
+    @Scheduled(cron = "0 0/30 * * * ?")
 //    @Transactional 这里需要这个注解吗？因为只有一个方法，所有SQL都在一个方法里
     public void cron() {
         // 增加日志流水号
