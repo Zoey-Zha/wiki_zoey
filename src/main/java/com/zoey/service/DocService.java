@@ -18,7 +18,6 @@ import com.zoey.util.CopyUtil;
 import com.zoey.util.RedisUtil;
 import com.zoey.util.RequestContext;
 import com.zoey.util.SnowFlake;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -55,8 +54,8 @@ public class DocService {
     public WebSocketService webSocketService;
 
 
-     @Resource
-     private RocketMQTemplate rocketMQTemplate;
+//     @Resource
+//     private RocketMQTemplate rocketMQTemplate;
 
 
 //    public List<Doc> getList() {
@@ -308,8 +307,8 @@ public class DocService {
 //        webSocketServer.sendInfo("【" + docDb.getName() + "】Liked!");
         // 单一设计原则，docDb还是在这里获取
         String LOG_ID = MDC.get("LOG_ID");
-        // webSocketService.sendInfo("【" + docDb.getName() + "】Liked!", LOG_ID);
-        rocketMQTemplate.convertAndSend("tinterTopic", "【" + docDb.getName() + "】Liked!");
+        webSocketService.sendInfo("【" + docDb.getName() + "】Liked!", LOG_ID);
+//        rocketMQTemplate.convertAndSend("tinterTopic", "【" + docDb.getName() + "】Liked!");
     }
 
 
