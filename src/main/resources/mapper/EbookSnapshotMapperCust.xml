@@ -38,4 +38,14 @@
         order by 1;
     </select>
 
+    <select id="get30EbookStats" resultType="com.zoey.reps.EbookStatsResp">
+        select `date`,
+               sum(view_count) as viewCount,
+               sum(vote_count) as voteCount,
+        from ebook_snapshot
+        where `date` between date_sub(curdate(), interval  30 day) and date_sub(curdate(), interval  1 day)
+        group by 1
+        order by 1;
+    </select>
+
 </mapper>

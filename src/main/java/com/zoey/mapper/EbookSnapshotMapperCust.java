@@ -9,4 +9,6 @@ public interface EbookSnapshotMapperCust {
     public void getEbookSnapshot();
 
     public List<EbookStatsResp> getEbookStats();
+
+    public List<EbookStatsResp> get30EbookStats();
 }
