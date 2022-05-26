@@ -3,27 +3,32 @@
     <a-layout-sider width="200" style="background: #fff">
       <a-menu
           mode="inline"
+          :style="{ height: '100%', borderRight: 0 }"
           @click="handleClick"
+          :openKeys="openKeys"
       >
         <a-menu-item key="welcome">
-            <span>Welcome</span>
+          <MailOutlined />
+          <span>欢迎</span>
         </a-menu-item>
-        <a-sub-menu v-for="item in level1" :key="item.id">
+        <a-sub-menu v-for="item in level1" :key="item.id" :disabled="true">
           <template v-slot:title>
-            <span>{{item.name}}</span>
+            <span><user-outlined />{{item.name}}</span>
           </template>
           <a-menu-item v-for="child in item.children" :key="child.id">
-            <span>{{child.name}}</span>
+            <MailOutlined /><span>{{child.name}}</span>
           </a-menu-item>
         </a-sub-menu>
+        <a-menu-item key="tip" :disabled="true">
+          <span>以上菜单在分类管理配置</span>
+        </a-menu-item>
       </a-menu>
     </a-layout-sider>
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
       <div class="welcome" v-show="isShowWelcome">
-<!--        <the-welcome></the-welcome>-->
-        <span>Welcome to my party</span>
+        <the-welcome></the-welcome>
       </div>
       <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3 }" :data-source="ebooks">
         <template #renderItem="{ item }">
@@ -62,7 +67,7 @@ import { defineComponent, onMounted, ref, reactive, toRef } from 'vue';
 import axios from 'axios';
 import { message } from 'ant-design-vue';
 import {Tool} from "@/util/tool";
-// import TheWelcome from '@/components/the-welcome.vue';
+import TheWelcome from '@/components/TheWelcome.vue';
 
 // const listData: any = [];
 // for (let i = 0; i < 23; i++) {
@@ -79,14 +84,14 @@ import {Tool} from "@/util/tool";
 
 export default defineComponent({
   name: 'Home',
-  // components: {
-  //   TheWelcome
-  // },
+  components: {
+    TheWelcome
+  },
   setup() {
     const ebooks = ref();
     // const ebooks1 = reactive({books: []});
 
-    // const openKeys =  ref();
+    const openKeys =  ref();
 
     const level1 =  ref();
     let categorys: any;
@@ -101,10 +106,10 @@ export default defineComponent({
           console.log("原始数组：", categorys);
 
           // 加载完分类后，将侧边栏全部展开
-          // openKeys.value = [];
-          // for (let i = 0; i < categorys.length; i++) {
-          //   openKeys.value.push(categorys[i].id)
-          // }
+          openKeys.value = [];
+          for (let i = 0; i < categorys.length; i++) {
+            openKeys.value.push(categorys[i].id)
+          }
 
           level1.value = [];
           level1.value = Tool.array2Tree(categorys, 0);
@@ -170,7 +175,7 @@ export default defineComponent({
 
       isShowWelcome,
 
-      //openKeys
+      openKeys
     }
   }
 });
