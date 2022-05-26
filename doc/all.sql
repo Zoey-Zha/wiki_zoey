@@ -114,3 +114,33 @@ create table `ebook_snapshot` (
                                   primary key (`id`),
                                   unique key `ebook_id_date_unique` (`ebook_id`, `date`)
 ) engine=innodb default charset=utf8mb4 comment='电子书快照表';
+
+
+# -- insert new books every time,我想用antijoin
+# insert into ebook_snapshot(ebook_id, date, view_count, vote_count, view_increase, vote_increase)
+# select t1.id,curdate(), 0, 0, 0, 0
+# from ebook t1 ANTIJOIN ebook_snapshot t2
+# on t1.id = t2.ebook_id and t2.`date`= curdate();
+
+-- insert new books (from the video)
+-- not exists(select 1) 学习下select 1,我猜select 1等价于select *
+insert into ebook_snapshot(ebook_id, date, view_count, vote_count, view_increase, vote_increase)
+SELECT *
+FROM ebook t1
+where not exists(
+        select 1
+        from ebook_snapshot t2
+        where t1.id = t2.ebook_id and t2.`date` = curdate());
+
+-- update ebook_snapshot, vote_count, view_count
+update ebook_snapshot t1,ebook t2
+set t1.vote_count = t2.vote_count, t1.view_count = t2.view_count
+where t1.ebook_id = t2.id and t1.`date` = curdate();
+
+-- update ebook_snapshot, increase_view, increase_vote
+update ebook_snapshot t1 left join
+    (select * from ebook_snapshot where 'date'=date_sub(curdate(), interval 1 day)) t2
+    on t1.ebook_id = t2.ebook_id
+set t1.view_increase = t1.view_count - ifnull(t2.view_count,0),
+    t1.vote_increase = t1.vote_count - ifnull(t2.vote_count,0)
+where t1.date = curdate();

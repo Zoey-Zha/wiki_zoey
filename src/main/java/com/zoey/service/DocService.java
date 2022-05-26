@@ -311,8 +311,6 @@ public class DocService {
 //        rocketMQTemplate.convertAndSend("tinterTopic", "【" + docDb.getName() + "】Liked!");
     }
 
-
-
     public void updateEbookInfo() {
         docMapperCust.updateEbookInfo();
     }

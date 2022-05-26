@@ -22,9 +22,9 @@ logging.level.com.zoey.mapper:
   trace
 
 # rocketmq 配置
-rocketmq:
-  producer:
-    group: default
-  name-server: 127.0.0.1:9876
+#rocketmq:
+#  producer:
+#    group: default
+#  name-server: 127.0.0.1:9876
 
 
