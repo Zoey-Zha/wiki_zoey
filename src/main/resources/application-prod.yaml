@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    url: jdbc:mysql://rm-8vbt8itis1bqz97960o.mysql.zhangbei.rds.aliyuncs.com/wikidev?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: wikidev
+    password: 1qaz!QAZ
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: r-uf6ljbcdaxobsifyctpd.redis.rds.aliyuncs.com
+    port: 6379
+    password: Redis000
+
+# 配置Mybatis
+mybatis:
+  mapper-locations: classpath:/mapper/**/*.xml
+
+# 配置后端端口号，怀疑跟前端的8080冲突
+server:
+  port: 8090
+
+# 增加数据库查询结果日志打印，打印所有sql日志，参数，结果
+logging.level.com.zoey.mapper:
+  trace
+
+# rocketmq 配置
+#rocketmq:
+#  producer:
+#    group: default
+#  name-server: 127.0.0.1:9876
+
+
+## log 配置
+#logging:
+#  file:
+#    path: log.log
+
+
