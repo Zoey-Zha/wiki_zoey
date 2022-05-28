@@ -11,7 +11,7 @@ import { message } from 'ant-design-vue';
 
 axios.defaults.baseURL = process.env.VUE_APP_SERVER;
 
-axios.defaults.baseURL=process.env.VUE_APP_SERVER_URL
+// axios.defaults.baseURL=process.env.VUE_APP_SERVER_URL
 
 /**
  * axios拦截器
@@ -50,4 +50,4 @@ axios.interceptors.response.use(function (response) {
 
 createApp(App).use(store).use(router).use(Antd).mount('#app');
 console.log("env: " + process.env.NODE_ENV);
-console.log("VUE_APP_SERVER_URL: " + process.env.VUE_APP_SERVER_URL);
+console.log("VUE_APP_SERVER: " + process.env.VUE_APP_SERVER);

@@ -1,0 +1,26 @@
+2022-05-29 00:00:00.015 DEBUG c.z.m.EbookSnapshotMapperCust.getEbookSnapshot    :137 
+                [32m725719449293056   [0;39m ==>  Preparing: -- update ebooks insert into ebook_snapshot(ebook_id, date, view_count, vote_count, view_increase, vote_increase) SELECT t1.id, curdate(), 0, 0, 0, 0 FROM ebook t1 where not exists( select 1 from ebook_snapshot t2 where t1.id = t2.ebook_id and t2.`date` = curdate()); -- update ebook_snapshot, vote_count, view_count update ebook_snapshot t1,ebook t2 set t1.vote_count = t2.vote_count, t1.view_count = t2.view_count where t1.ebook_id = t2.id and t1.`date` = curdate(); -- update ebook_snapshot, increase_view, increase_vote update ebook_snapshot t1 left join (select * from ebook_snapshot where `date`=date_sub(curdate(), interval 1 day)) t2 on t1.ebook_id = t2.ebook_id set t1.view_increase = t1.view_count - ifnull(t2.view_count,0), t1.vote_increase = t1.vote_count - ifnull(t2.vote_count,0) where t1.`date` = curdate();
+2022-05-29 00:00:00.037 DEBUG c.z.m.EbookSnapshotMapperCust.getEbookSnapshot    :137 
+                [32m725719449293056   [0;39m ==> Parameters: 
+2022-05-29 00:00:00.067 DEBUG c.z.m.EbookSnapshotMapperCust.getEbookSnapshot    :137 
+                [32m725719449293056   [0;39m <==    Updates: 0
+2022-05-29 00:00:00.069 INFO  com.zoey.job.DocJob                               :35  
+                [32m725719449293056   [0;39m updating finished, duration: 81 毫秒
+2022-05-29 00:00:06.288 INFO  com.zoey.websocket.WebSocketServer                :42  
+                [32m725642021310720   [0;39m 连接关闭，token：yt96dCADZ7，session id：12！当前连接数：0
+2022-05-29 00:00:06.496 INFO  com.zoey.filter.LogFilter                         :25  
+                [32m725715069358336   [0;39m ------------- LogFilter 开始 -------------
+2022-05-29 00:00:06.498 INFO  com.zoey.filter.LogFilter                         :26  
+                [32m725715069358336   [0;39m 请求地址: http://127.0.0.1:8090/ws/OEXjv0oJYp GET
+2022-05-29 00:00:06.499 INFO  com.zoey.filter.LogFilter                         :27  
+                [32m725715069358336   [0;39m 远程地址: 127.0.0.1
+2022-05-29 00:00:06.505 INFO  com.zoey.filter.LogFilter                         :31  
+                [32m725715069358336   [0;39m ------------- LogFilter 结束 耗时：6 ms -------------
+2022-05-29 00:00:06.513 INFO  com.zoey.websocket.WebSocketServer                :33  
+                [32m725715069358336   [0;39m 有新连接：token：OEXjv0oJYp，session id：13，当前连接数：1
+2022-05-29 00:03:21.909 INFO  com.zoey.websocket.WebSocketServer                :42  
+                [32m                  [0;39m 连接关闭，token：OEXjv0oJYp，session id：13！当前连接数：0
+2022-05-29 00:03:22.065 INFO  com.zaxxer.hikari.HikariDataSource                :350 
+                [32m                  [0;39m HikariPool-1 - Shutdown initiated...
+2022-05-29 00:03:22.077 INFO  com.zaxxer.hikari.HikariDataSource                :352 
+                [32m                  [0;39m HikariPool-1 - Shutdown completed.
