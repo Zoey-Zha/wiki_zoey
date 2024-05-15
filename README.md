@@ -1,2 +1,2 @@
 # wiki_zoey
-I am studying Spring Boot
+Spring Boot and VUE
